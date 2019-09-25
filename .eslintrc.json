@@ -1,0 +1,22 @@
+{
+  "extends": [
+    "eslint:recommended",
+    "plugin:flowtype/recommended"
+  ],
+  "parser": "babel-eslint",
+  "plugins": [
+    "prettier","react-hooks",
+    "react",
+    "flowtype"
+  ],
+  "rules": {
+    "prettier/prettier": "warn",
+    "react-hooks/rules-of-hooks": "error",
+    "react/jsx-uses-react": "error",
+    "react/jsx-uses-vars": "error",
+    "no-unrestricted-globals": "warn"
+  },
+  "env": {
+    "browser": true
+  }
+}
