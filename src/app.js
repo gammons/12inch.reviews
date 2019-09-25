@@ -1,12 +1,24 @@
-import React from "react"
+import React, { useState, useEffect } from "react"
 import { getAlbums } from "./backend"
+import Album from "./components/album"
 
 const App = () => {
-  //getAlbums().then(console.log)
+  const [albums, setAlbums] = useState([])
+
+  useEffect(() => {
+    const retrieve = async () => {
+      setAlbums(await getAlbums())
+    }
+    retrieve()
+  }, [albums.length])
+
   return (
-    <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-      Button
-    </button>
+    <div>
+      <h1>Albums</h1>
+      {albums.map(album => (
+        <Album album={album} />
+      ))}
+    </div>
   )
 }
 
