@@ -20,6 +20,10 @@ class Retriever
     @spotify = Spotify.new(ENV["SPOTIFY_CLIENT_ID"], ENV["SPOTIFY_CLIENT_SECRET"], @logger)
   end
 
+  def access_token
+    puts @spotify.authorize
+  end
+
   def perform
     fetch_albums
     post_process
@@ -72,4 +76,4 @@ class Retriever
   end
 end
 
-Retriever.new.perform
+Retriever.new.access_token

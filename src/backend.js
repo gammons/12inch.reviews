@@ -3,33 +3,30 @@ import Album from "./models/album"
 const BackendUrl = "https://pitchfork.com"
 
 export const getAlbums = () => {
-  return apiRequest("/api/v2/search", "GET", {
-    types: "reviews",
-    sort: "publishdate desc, position asc",
-    hierarchy: "sections/reviews/albums,channels/reviews/albums",
-    size: 12,
-    start: 0
-  }).then(data => {
-    return data.results.list.map(res => {
+  apiRequest("/reviews.json", "GET").then(albums => {
+    albums.forEach(albumData => {
       const album = new Album()
-      album.id = res.id
-      album.timestamp = res.timestamp
-      album.title = res.title
-      album.artistName = res.artists[0].display_name
-      album.rating = res.tombstone.albums[0].rating.display_rating
-      album.bnm = res.tombstone.albums[0].rating.bnm
-      album.bnr = res.tombstone.albums[0].rating.bnr
-      album.label =
-        res.tombstone.albums[0].labels_and_years[0].labels[0].display_name
-      album.url = res.url
-      album.description = res.socialDescription
-      album.genre = res.genres[0].display_name
-      return album
+      album.id = albumData.id
+      album.timestamp = albumData.timestamp
+      album.title = albumData.title
+      album.artistName = albumData.artistName
+      album.rating = albumData.rating
+      album.bnm = albumData.bnm
+      album.bnr = albumData.bnr
+      album.label = albumData.label
+      album.url = albumData.url
+      album.description = albumData.description
+      album.genre = albumData.genre
+      album.imageUrl = albumData.image_url
     })
   })
 }
 
-const apiRequest = (path: string, method: string, params: object = {}) => {
+export const apiRequest = (
+  path: string,
+  method: string,
+  params: object = {}
+) => {
   return new Promise((resolve, reject) => {
     const headers = new Headers()
 

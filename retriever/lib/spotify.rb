@@ -43,8 +43,6 @@ class Spotify
     nil
   end
 
-  private
-
   def authorize
     encoded = Base64.encode64("#{ENV["SPOTIFY_CLIENT_ID"]}:#{ENV["SPOTIFY_CLIENT_SECRET"]}").gsub(/\n/,"")
     resp = HTTP.headers("Authorization": "Basic #{encoded}").post("https://accounts.spotify.com/api/token", form: {grant_type: "client_credentials"})

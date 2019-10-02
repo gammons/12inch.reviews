@@ -1,7 +1,15 @@
+// @flow
 import React from "react"
 
 const Album = props => {
-  return <li>{props.album.title}</li>
+  const album = props.album
+
+  return (
+    <div>
+      <img src={album.image_url} />
+      <p>{album.description}</p>
+    </div>
+  )
 }
 
 export default Album
