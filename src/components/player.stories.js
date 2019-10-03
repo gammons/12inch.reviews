@@ -5,6 +5,8 @@ import { storiesOf } from "@storybook/react"
 import Player from "./player"
 import SpotifyLogin from "./spotifyLogin"
 
+import "../styles/tailwind.css"
+
 storiesOf("Player", module)
   .add("simple", () => {
     return (

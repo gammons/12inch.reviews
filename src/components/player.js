@@ -15,9 +15,9 @@ const Player = props => {
   const [spotifyPlayer, setSpotifyPlayer] = useState(null)
   const [position, setPosition] = useState(0)
   const [trackNum, setTrackNum] = useState(0)
-  const [artist, setArtist] = useState("")
-  const [album, setAlbum] = useState("")
-  const [trackTitle, setTrackTitle] = useState("")
+  const [artist, setArtist] = useState("No Artist")
+  const [album, setAlbum] = useState("No album")
+  const [trackTitle, setTrackTitle] = useState("No track")
   const [trackDuration, setTrackDuration] = useState(0)
   const [albumImageURL, setAlbumImageURL] = useState(null)
 
@@ -94,7 +94,7 @@ const Player = props => {
 
 const NextTrackButton = props => {
   return (
-    <a onClick={props.onClick}>
+    <a className="text-2xl" onClick={props.onClick}>
       <FontAwesomeIcon icon={faStepForward} />
     </a>
   )
@@ -102,7 +102,7 @@ const NextTrackButton = props => {
 
 const PrevTrackButton = props => {
   return (
-    <a onClick={props.onClick}>
+    <a className="text-2xl text-red-500" onClick={props.onClick}>
       <FontAwesomeIcon icon={faStepBackward} />
     </a>
   )
