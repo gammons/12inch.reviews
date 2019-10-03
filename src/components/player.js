@@ -1,29 +1,25 @@
 // @flow
 import React, { useState } from "react"
-// import { useSpotifyWebPlaybackSdk } from "use-spotify-web-playback-sdk"
-import SpotifyPlayer from "../spotifyPlayer"
-
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { library, icon } from "@fortawesome/fontawesome-svg-core"
-import { faPlay } from "@fortawesome/free-solid-svg-icons"
+import {
+  faStepForward,
+  faStepBackward
+} from "@fortawesome/free-solid-svg-icons"
 
-const PlayButton = props => {
-  return props.isPlaying ? (
-    <button onClick={props.onClick}>Pause</button>
-  ) : (
-    <button onClick={props.onClick}>Play</button>
-  )
-}
+import SpotifyPlayer from "../spotifyPlayer"
+import PlayButton from "./player/playButton"
 
 const Player = props => {
-  console.log("props is ", props)
   const [isPlaying, setIsPlaying] = useState(false)
   const [spotifyPlayer, setSpotifyPlayer] = useState(null)
-  // const [deviceID, setDeviceID] = useState(null)
-  // const [player, setPlayer] = useState(null)
-
-  //library.add(faPlay)
-  // const playIcon = icon({ prefix: "fas", iconName: "play" })
-  // console.log("playIcon = ", playIcon)
+  const [position, setPosition] = useState(0)
+  const [trackNum, setTrackNum] = useState(0)
+  const [artist, setArtist] = useState("")
+  const [album, setAlbum] = useState("")
+  const [trackTitle, setTrackTitle] = useState("")
+  const [trackDuration, setTrackDuration] = useState(0)
+  const [albumImageURL, setAlbumImageURL] = useState(null)
 
   React.useEffect(() => {
     const aPlayer = new window.Spotify.Player({
@@ -36,7 +32,21 @@ const Player = props => {
     aPlayer.addListener("authentication_error", console.error)
     aPlayer.addListener("account_error", console.error)
     aPlayer.addListener("playback_error", console.error)
-    aPlayer.addListener("player_state_changed", console.log)
+
+    aPlayer.addListener("player_state_changed", state => {
+      console.log("player_state = ", state)
+
+      setArtist(state.track_window.current_track.artists[0].name)
+      setAlbum(state.track_window.current_track.album.name)
+      setTrackTitle(state.track_window.current_track.name)
+      setTrackDuration(state.track_window.current_track.duration_ms)
+      setAlbumImageURL(state.track_window.current_track.album.images[0].url)
+      setPosition(state.position)
+
+      if (state.paused) {
+        setIsPlaying(false)
+      }
+    })
 
     aPlayer.addListener("ready", ret => {
       setSpotifyPlayer(new SpotifyPlayer(ret.device_id, props.accessToken))
@@ -47,16 +57,54 @@ const Player = props => {
 
   const onTogglePlay = () => {
     if (!isPlaying) {
-      spotifyPlayer.play(props.uri).then(() => setIsPlaying(!isPlaying))
+      spotifyPlayer
+        .play(props.uri, trackNum, position)
+        .then(() => setIsPlaying(!isPlaying))
     } else {
       spotifyPlayer.pause().then(() => setIsPlaying(!isPlaying))
     }
   }
 
+  const onRequestNextTrack = () => {
+    if (isPlaying) {
+      spotifyPlayer.play(props.uri, trackNum + 1, 0)
+    }
+    setPosition(0)
+    setTrackNum(trackNum + 1)
+  }
+
+  const onRequestPrevTrack = () => {
+    if (trackNum == 0) return
+
+    if (isPlaying) {
+      spotifyPlayer.play(props.uri, trackNum - 1, 0)
+    }
+    setPosition(0)
+    setTrackNum(trackNum - 1)
+  }
+
   return (
     <React.Suspense fallback={<div>Loading...</div>}>
+      <PrevTrackButton onClick={onRequestPrevTrack} />
       <PlayButton isPlaying={isPlaying} onClick={onTogglePlay} />
+      <NextTrackButton onClick={onRequestNextTrack} />
     </React.Suspense>
+  )
+}
+
+const NextTrackButton = props => {
+  return (
+    <a onClick={props.onClick}>
+      <FontAwesomeIcon icon={faStepForward} />
+    </a>
+  )
+}
+
+const PrevTrackButton = props => {
+  return (
+    <a onClick={props.onClick}>
+      <FontAwesomeIcon icon={faStepBackward} />
+    </a>
   )
 }
 

@@ -7,12 +7,26 @@ export default class SpotifyPlayer {
     this.accessToken = accessToken
   }
 
-  play(uri) {
+  getPlayerState() {
+    return fetch(`https://api.spotify.com/v1/me/player`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${this.accessToken}`
+      }
+    })
+  }
+
+  play(uri, trackNum, position) {
     return fetch(
       `https://api.spotify.com/v1/me/player/play?device_id=${this.deviceID}`,
       {
         method: "PUT",
-        body: JSON.stringify({ uris: [uri] }),
+        body: JSON.stringify({
+          context_uri: uri,
+          offset: { position: trackNum },
+          position_ms: position
+        }),
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${this.accessToken}`
