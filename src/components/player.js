@@ -1,5 +1,5 @@
 // @flow
-import React, { useState } from "react"
+import React, { useState, useRef } from "react"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { library, icon } from "@fortawesome/fontawesome-svg-core"
 import {
@@ -9,11 +9,18 @@ import {
 
 import SpotifyPlayer from "../spotifyPlayer"
 import PlayButton from "./player/playButton"
+import ProgressBar from "./player/progressBar"
+
+let timer
 
 const Player = props => {
   const [isPlaying, setIsPlaying] = useState(false)
   const [spotifyPlayer, setSpotifyPlayer] = useState(null)
+
   const [position, setPosition] = useState(0)
+  const positionRef = useRef(position)
+  positionRef.current = position
+
   const [trackNum, setTrackNum] = useState(0)
   const [artist, setArtist] = useState("No Artist")
   const [album, setAlbum] = useState("No album")
@@ -55,11 +62,18 @@ const Player = props => {
     aPlayer.connect()
   }, [])
 
+  React.useEffect(() => {
+    if (!isPlaying) {
+      clearTimeout(timer)
+    }
+  })
+
   const onTogglePlay = () => {
     if (!isPlaying) {
-      spotifyPlayer
-        .play(props.uri, trackNum, position)
-        .then(() => setIsPlaying(!isPlaying))
+      spotifyPlayer.play(props.uri, trackNum, position).then(() => {
+        setIsPlaying(!isPlaying)
+        progressTick()
+      })
     } else {
       spotifyPlayer.pause().then(() => setIsPlaying(!isPlaying))
     }
@@ -83,6 +97,19 @@ const Player = props => {
     setTrackNum(trackNum - 1)
   }
 
+  const progressTick = () => {
+    setPosition(positionRef.current + 1000)
+    timer = setTimeout(progressTick, 1000)
+  }
+
+  const progressClick = percentage => {
+    const newPosition = trackDuration * percentage
+    setPosition(newPosition)
+    if (isPlaying) {
+      spotifyPlayer.play(props.uri, trackNum, newPosition)
+    }
+  }
+
   return (
     <React.Suspense fallback={<div>Loading...</div>}>
       <div className="w-auto flex flex-row">
@@ -95,10 +122,17 @@ const Player = props => {
           <p className="text-xl font-bold">{trackTitle}</p>
           <p className="text-xl font-bold text-gray-600">{album}</p>
 
-          <div className="w-3/5 flex flex-row justify-around items-center border border-red-500">
-            <PrevTrackButton onClick={onRequestPrevTrack} />
-            <PlayButton isPlaying={isPlaying} onClick={onTogglePlay} />
-            <NextTrackButton onClick={onRequestNextTrack} />
+          <div className="w-3/5">
+            <div className="w-full flex flex-row justify-around items-center">
+              <PrevTrackButton onClick={onRequestPrevTrack} />
+              <PlayButton isPlaying={isPlaying} onClick={onTogglePlay} />
+              <NextTrackButton onClick={onRequestNextTrack} />
+            </div>
+
+            <ProgressBar
+              percentage={position / trackDuration}
+              onClick={progressClick}
+            />
           </div>
         </div>
       </div>
