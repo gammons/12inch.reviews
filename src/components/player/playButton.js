@@ -5,11 +5,11 @@ import { faPlay, faPause } from "@fortawesome/free-solid-svg-icons"
 
 const PlayButton = props => {
   return props.isPlaying ? (
-    <a onClick={props.onClick}>
+    <a className="text-2xl" onClick={props.onClick}>
       <FontAwesomeIcon icon={faPause} />
     </a>
   ) : (
-    <a onClick={props.onClick}>
+    <a className="text-2xl" onClick={props.onClick}>
       <FontAwesomeIcon icon={faPlay} />
     </a>
   )
