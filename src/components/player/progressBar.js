@@ -14,13 +14,13 @@ const ProgressBar = props => {
     <div
       className="border border-gray-400 shadow w-full rounded-sm"
       onClick={onClick}
-      style={{ transition: "all 1s" }}
       ref={r => (bar = r)}
     >
       <div
         className="bg-gray-800 text-xs leading-none py-2 text-center text-white"
         style={{
-          width: `${(props.percentage || 0) * 100}%`
+          width: `${(props.percentage || 0) * 100}%`,
+          transition: "all 0.5s linear"
         }}
       />
     </div>
