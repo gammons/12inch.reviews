@@ -27,5 +27,9 @@ const albumData = {
 const album = new AlbumModel(albumData)
 
 storiesOf("Album", module).add("simple", () => {
-  return <Album album={album} />
+  return (
+    <div className="bg-gray-100 p-4">
+      <Album album={album} />
+    </div>
+  )
 })
