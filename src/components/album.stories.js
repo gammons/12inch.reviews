@@ -111,9 +111,7 @@ storiesOf("Album", module).add("simple", () => {
   return (
     <div className="bg-gray-100 p-4 flex flex-row flex-wrap">
       {albums.map(album => (
-        <div className="p-4">
-          <Album onPlay={onPlay} album={album} />
-        </div>
+        <Album onPlay={onPlay} album={album} />
       ))}
     </div>
   )

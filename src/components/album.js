@@ -22,23 +22,25 @@ const Album = props => {
   }
 
   return (
-    <div className="max-w-2xl">
+    <div className="w-full max-w-2xl md:p-4">
       <div className="border-r border-b border-l border-gray-400 lg:border-l-0 lg:border-t lg:border-grey-light bg-white rounded flex flex-row leading-normal">
         <div
-          className="h-64 w-64 flex-none bg-cover rounded-t lg:rounded-t-none md:rounded-l text-center overflow-hidden"
+          className="absolute md:static h-24 w-24 md:h-64 md:w-64 flex-none bg-cover rounded-t lg:rounded-t-none md:rounded-l text-center overflow-hidden"
           style={{ backgroundImage: `url(${album.image_url})` }}
         />
 
         <div className="flex flex-col justify-between">
           <div className="p-4 w-full flex flex-col">
-            <p className="text-black font-bold text-xl">{album.artist}</p>
-            <p className="text-gray-700 font-bold">{album.title}</p>
-            <p className="text-gray-600 text-xl flex flex-row justify-between">
-              <span>
-                Rating: <Rating rating={album.rating} />
-              </span>
-              <span className="text-base">{album.genre}</span>
-            </p>
+            <div className="pl-24 md:pl-0">
+              <p className="text-black font-bold text-xl">{album.artist}</p>
+              <p className="text-gray-700 font-bold">{album.title}</p>
+              <p className="text-gray-600 text-xl flex flex-col sm:flex-row justify-between">
+                <span>
+                  Rating: <Rating rating={album.rating} />
+                </span>
+                <span>{album.genre}</span>
+              </p>
+            </div>
 
             <p
               className="text-gray-900 text-base mt-3"
@@ -54,10 +56,12 @@ const Album = props => {
 
           <div className="p-4 flex flex-row justify-around text-gray-700">
             <a className="cursor-pointer" onClick={onPlayAlbum}>
-              <FontAwesomeIcon icon={faPlay} /> Play album
+              <FontAwesomeIcon icon={faPlay} />{" "}
+              <span className="hidden md:inline">Play album</span>
             </a>
             <a href="#" target="_blank" href={album.url}>
-              <FontAwesomeIcon icon={faBookOpen} /> Read review
+              <FontAwesomeIcon icon={faBookOpen} />{" "}
+              <span className="hidden md:inline">Read review</span>
             </a>
           </div>
         </div>

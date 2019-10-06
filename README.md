@@ -6,10 +6,11 @@
 
 **albums**
 * [x] display genre somewhere
-* make responsive / mobile friendly
+* [ ] make responsive / mobile friendly
 
 **app**
 * [ ] define routing
+* [ ] wire up searching 
 * [ ] piece everything together
 * [ ] small json payload to start, load larger payload once app is up
 
@@ -20,3 +21,4 @@
 * [x] by name
 * [x] by genre
 * [x] by rating
+* [x] responsive
