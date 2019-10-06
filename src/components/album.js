@@ -33,23 +33,24 @@ const Album = props => {
           <div className="p-4 w-full flex flex-col">
             <p className="text-black font-bold text-xl">{album.artist}</p>
             <p className="text-gray-700 font-bold">{album.title}</p>
-            <p className="text-gray-600 text-xl">
-              Rating: <Rating rating={album.rating} />
+            <p className="text-gray-600 text-xl flex flex-row justify-between">
+              <span>
+                Rating: <Rating rating={album.rating} />
+              </span>
+              <span className="text-base">{album.genre}</span>
             </p>
+
             <p
               className="text-gray-900 text-base mt-3"
               style={{
-                maxHeight: 75,
+                maxHeight: 73,
+                minHeight: 73,
                 overflow: "hidden"
-                // textOverflow: "ellipsis",
-                // whiteSpace: "nowrap"
               }}
             >
               {album.description}
             </p>
           </div>
-
-          <hr />
 
           <div className="p-4 flex flex-row justify-around text-gray-700">
             <a className="cursor-pointer" onClick={onPlayAlbum}>
