@@ -118,14 +118,14 @@ const Player = props => {
           style={{ backgroundImage: `url(${albumImageURL})` }}
         />
 
-        <div className="w-4/5 border border-gray-400">
+        <div className="w-full md:w-4/5 border border-gray-400">
           <div className="p-4">
             <p className="text-xl font-bold">{artist}</p>
             <p className="text-lg font-bold">{trackTitle}</p>
             <p className="text-lg font-bold text-gray-600">{album}</p>
           </div>
 
-          <div className="w-3/5 px-4">
+          <div className="w-full md:w-3/5 px-1 md:px-4">
             <div className="w-full flex flex-row justify-around items-center mb-4">
               <PrevTrackButton onClick={onRequestPrevTrack} />
               <PlayButton isPlaying={isPlaying} onClick={onTogglePlay} />
