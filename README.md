@@ -6,6 +6,7 @@
 
 **albums**
 * [x] display genre somewhere
+* make responsive / mobile friendly
 
 **app**
 * [ ] define routing
@@ -18,4 +19,4 @@
 **search**
 * [x] by name
 * [x] by genre
-* [ ] by rating
+* [x] by rating
