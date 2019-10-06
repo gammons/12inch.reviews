@@ -5,9 +5,5 @@ import { storiesOf } from "@storybook/react"
 import SearchBar from "./searchBar"
 
 storiesOf("Search Bar", module).add("basic", () => {
-  return (
-    <div className="p-8">
-      <SearchBar />
-    </div>
-  )
+  return <SearchBar />
 })
