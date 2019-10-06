@@ -17,7 +17,7 @@ const ProgressBar = props => {
       ref={r => (bar = r)}
     >
       <div
-        className="bg-gray-800 text-xs leading-none py-2 text-center text-white"
+        className="bg-gray-800 text-xs leading-none py-1 text-center text-white"
         style={{
           width: `${(props.percentage || 0) * 100}%`,
           transition: "all 0.5s linear"

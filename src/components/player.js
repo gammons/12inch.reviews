@@ -1,7 +1,7 @@
 // @flow
 import React, { useState, useRef } from "react"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { library, icon } from "@fortawesome/fontawesome-svg-core"
+import { icon } from "@fortawesome/fontawesome-svg-core"
 import {
   faStepForward,
   faStepBackward
@@ -113,17 +113,20 @@ const Player = props => {
   return (
     <React.Suspense fallback={<div>Loading...</div>}>
       <div className="w-auto flex flex-row">
-        <div className="w-1/5">
-          <img src={albumImageURL} />
-        </div>
+        <div
+          className="h-48 w-48 flex-none bg-cover rounded-t lg:rounded-t-none md:rounded-l text-center overflow-hidden"
+          style={{ backgroundImage: `url(${albumImageURL})` }}
+        />
 
-        <div className="w-4/5 border border-blue-500 p-4">
-          <p className="text-2xl font-bold">{artist}</p>
-          <p className="text-xl font-bold">{trackTitle}</p>
-          <p className="text-xl font-bold text-gray-600">{album}</p>
+        <div className="w-4/5 border border-gray-400">
+          <div className="p-4">
+            <p className="text-xl font-bold">{artist}</p>
+            <p className="text-lg font-bold">{trackTitle}</p>
+            <p className="text-lg font-bold text-gray-600">{album}</p>
+          </div>
 
-          <div className="w-3/5">
-            <div className="w-full flex flex-row justify-around items-center">
+          <div className="w-3/5 px-4">
+            <div className="w-full flex flex-row justify-around items-center mb-4">
               <PrevTrackButton onClick={onRequestPrevTrack} />
               <PlayButton isPlaying={isPlaying} onClick={onTogglePlay} />
               <NextTrackButton onClick={onRequestNextTrack} />
