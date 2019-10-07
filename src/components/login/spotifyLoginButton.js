@@ -20,7 +20,7 @@ const SpotifyLoginButton = props => {
         verticalAlign: "middle",
         padding: "18px 48px 16px",
         fontWeight: "700",
-        fontFamily: "Circular, Helvetica, Arial, sans-serif;",
+        fontFamily: "Circular, Helvetica, Arial, sans-serif",
         borderColor: "rgb(8, 53, 24)",
         borderTopLeftRadius: "500px",
         borderTopRightRadius: "500px",
