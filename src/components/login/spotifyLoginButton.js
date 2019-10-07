@@ -29,7 +29,7 @@ const SpotifyLoginButton = props => {
       }}
       onClick={props.onClick}
     >
-      <FontAwesomeIcon icon={faSpotify} /> Login with Spotify
+      <FontAwesomeIcon icon={faSpotify} /> Listen with Spotify
     </a>
   )
 }

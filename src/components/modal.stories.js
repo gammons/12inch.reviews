@@ -23,7 +23,7 @@ const OuterModal = props => {
   )
 }
 
-storiesOf("Modal", module).add("Simple", () => {
+storiesOf("Static components", module).add("Modal", () => {
   return (
     <div className="p-4 border border-blue-500">
       <OuterModal isOpen={true}>

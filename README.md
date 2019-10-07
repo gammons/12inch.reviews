@@ -1,12 +1,17 @@
 # TODO
 
+**header**
+* [x] find record svg
+* [x] make simple header
+* [x] make responsive
+
 **login**
-* login with spotify modal
-* netlify function running locally and in prod
+* [ ] login with spotify modal
+* [ ] netlify function running locally and in prod
 
 **albums**
 * [x] display genre somewhere
-* [ ] make responsive / mobile friendly
+* [x] make responsive / mobile friendly
 
 **app**
 * [ ] define routing

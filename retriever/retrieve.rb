@@ -36,7 +36,7 @@ class Retriever
 
   def fetch_albums
     @albums = []
-    (0..20).each do |page|
+    (0..3).each do |page|
       new_albums = Pitchfork.new.get_albums(page)
       new_albums.each do |album|
         album.spotify_artist_id = @spotify.get_artist_id(album.artist)
@@ -76,4 +76,4 @@ class Retriever
   end
 end
 
-Retriever.new.access_token
+Retriever.new.perform

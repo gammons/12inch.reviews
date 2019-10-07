@@ -4,6 +4,6 @@ import { storiesOf } from "@storybook/react"
 
 import SearchBar from "./searchBar"
 
-storiesOf("Search Bar", module).add("basic", () => {
+storiesOf("Static components", module).add("Search bar", () => {
   return <SearchBar />
 })
