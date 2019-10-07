@@ -2,22 +2,19 @@ import React, { useState, useEffect } from "react"
 import { getAlbums } from "./backend"
 import Album from "./components/album"
 
+import Header from "./components/header"
+import SearchBar from "./components/searchBar"
+import Footer from "./components/footer"
+
 const App = () => {
-  const [albums, setAlbums] = useState([])
-
-  useEffect(() => {
-    const retrieve = async () => {
-      setAlbums(await getAlbums())
-    }
-    retrieve()
-  }, [albums.length])
-
   return (
-    <div>
-      <h1>Albums</h1>
-      {albums.map(album => (
-        <Album album={album} />
-      ))}
+    <div className="flex flex-col items-stretch min-h-screen">
+      <Header />
+      <SearchBar />
+      <div className="flex-grow">
+        <p>Albums</p>
+      </div>
+      <Footer />
     </div>
   )
 }

@@ -20,7 +20,8 @@
 * [ ] small json payload to start, load larger payload once app is up
 
 **misc**
-* [ ] register domain name
+* [x] register domain name
+* [ ] favicon
 
 **search**
 * [x] by name
