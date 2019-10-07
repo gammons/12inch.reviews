@@ -112,13 +112,13 @@ const Player = props => {
 
   return (
     <React.Suspense fallback={<div>Loading...</div>}>
-      <div className="w-auto flex flex-row">
+      <div className="w-full bg-gray-200 px-8 p-2 border-t-1 border-gray-400 shadow flex flex-row">
         <div
           className="h-48 w-48 flex-none bg-cover rounded-t lg:rounded-t-none md:rounded-l text-center overflow-hidden"
           style={{ backgroundImage: `url(${albumImageURL})` }}
         />
 
-        <div className="w-full md:w-4/5 border border-gray-400">
+        <div className="w-full md:w-4/5">
           <div className="p-4">
             <p className="text-xl font-bold">{artist}</p>
             <p className="text-lg font-bold">{trackTitle}</p>
