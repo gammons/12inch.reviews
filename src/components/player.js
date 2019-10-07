@@ -7,7 +7,7 @@ import {
   faStepBackward
 } from "@fortawesome/free-solid-svg-icons"
 
-import SpotifyPlayer from "../spotifyPlayer"
+import SpotifyPlayer from "../models/spotifyPlayer"
 import PlayButton from "./player/playButton"
 import ProgressBar from "./player/progressBar"
 
