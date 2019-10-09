@@ -12,7 +12,7 @@ const onPlay = albumID => {
 const AlbumShower = () => {
   const [data, setData] = useState(null)
   React.useEffect(() => {
-    fetch("./albums.json")
+    fetch("./first-albums.json")
       .then(data => data.json())
       .then(setData)
   }, [])
