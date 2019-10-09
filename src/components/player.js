@@ -14,6 +14,7 @@ import ProgressBar from "./player/progressBar"
 let timer
 
 const Player = props => {
+  const [isReady, setIsReady] = useState(false)
   const [isPlaying, setIsPlaying] = useState(false)
   const [spotifyPlayer, setSpotifyPlayer] = useState(null)
 
@@ -30,7 +31,7 @@ const Player = props => {
     "https://i.scdn.co/image/75e90ce91798e339ccee3835267f0918acb98700"
   )
 
-  React.useEffect(() => {
+  const setupPlayer = () => {
     const aPlayer = new window.Spotify.Player({
       name: "12inch.reviews Player",
       getOauthToken: cb => {
@@ -60,7 +61,16 @@ const Player = props => {
     })
 
     aPlayer.connect()
-  }, [])
+  }
+
+  React.useEffect(() => {
+    if (window.Spotify) {
+      if (!isReady) {
+        setupPlayer()
+      }
+      setIsReady(true)
+    }
+  })
 
   React.useEffect(() => {
     if (!isPlaying) {
