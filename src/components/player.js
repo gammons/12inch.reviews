@@ -121,35 +121,37 @@ const Player = props => {
   }
 
   return (
-    <React.Suspense fallback={<div>Loading...</div>}>
-      <div className="w-full bg-gray-200 px-8 p-2 border-t-1 border-gray-400 shadow flex flex-row">
-        <div
-          className="h-48 w-48 flex-none bg-cover rounded-t lg:rounded-t-none md:rounded-l text-center overflow-hidden"
-          style={{ backgroundImage: `url(${albumImageURL})` }}
-        />
+    <div className="w-full bg-gray-200 border-t-1 border-gray-400 shadow flex flex-row px-8 py-2">
+      <div
+        className="h-40 w-40 flex-none bg-cover rounded-t lg:rounded-t-none md:rounded-l text-center overflow-hidden"
+        style={{ backgroundImage: `url(${albumImageURL})` }}
+      />
 
-        <div className="w-full md:w-4/5">
-          <div className="p-4">
-            <p className="text-xl font-bold">{artist}</p>
-            <p className="text-lg font-bold">{trackTitle}</p>
-            <p className="text-lg font-bold text-gray-600">{album}</p>
+      <div className="w-full md:w-4/5">
+        <div className="p-4">
+          <div className="text-lg font-bold">
+            <span>{artist}</span>
+            <span className="hidden md:inline"> - </span>
+            <span className="hidden md:inline">{trackTitle}</span>
+          </div>
+          <p className="font-bold block md:hidden">{trackTitle}</p>
+          <p className="font-bold text-gray-600">{album}</p>
+        </div>
+
+        <div className="w-full md:w-3/5 px-1 md:px-4">
+          <div className="w-full flex flex-row justify-around items-center mb-4">
+            <PrevTrackButton onClick={onRequestPrevTrack} />
+            <PlayButton isPlaying={isPlaying} onClick={onTogglePlay} />
+            <NextTrackButton onClick={onRequestNextTrack} />
           </div>
 
-          <div className="w-full md:w-3/5 px-1 md:px-4">
-            <div className="w-full flex flex-row justify-around items-center mb-4">
-              <PrevTrackButton onClick={onRequestPrevTrack} />
-              <PlayButton isPlaying={isPlaying} onClick={onTogglePlay} />
-              <NextTrackButton onClick={onRequestNextTrack} />
-            </div>
-
-            <ProgressBar
-              percentage={position / trackDuration}
-              onClick={progressClick}
-            />
-          </div>
+          <ProgressBar
+            percentage={position / trackDuration}
+            onClick={progressClick}
+          />
         </div>
       </div>
-    </React.Suspense>
+    </div>
   )
 }
 

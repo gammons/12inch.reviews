@@ -5,6 +5,7 @@ import AlbumModel from "./models/album"
 
 import Header from "./components/header"
 import SearchBar from "./components/searchBar"
+import Player from "./components/player"
 import Footer from "./components/footer"
 
 const App = () => {
@@ -27,7 +28,11 @@ const App = () => {
           <Album key={count} album={album} />
         ))}
       </div>
-      <Footer />
+
+      <div className="fixed w-full bottom-0 border-t border-gray-400">
+        <Player />
+        <Footer />
+      </div>
     </div>
   )
 }
