@@ -7,7 +7,7 @@ import SpotifyLoginButton from "./login/spotifyLoginButton"
 
 const Header = props => {
   return (
-    <div className="w-full bg-gray-300 px-8 p-2 overflow-hidden border-b-1 border-gray-400 shadow flex flex-row flex-wrap justify-between items-center">
+    <div className="w-full bg-gray-200 px-8 p-2 overflow-hidden border-b-1 border-gray-400 shadow flex flex-row flex-wrap justify-between items-center">
       <div className="flex flex-row items-center m-auto sm:m-0">
         <img
           className="hidden sm:block"
