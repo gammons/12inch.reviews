@@ -18,8 +18,8 @@ const SearchBar = props => {
         />
       </div>
 
-      <div className="w-full lg:w-6/12 flex flex-row flex-wrap">
-        <div className="w-full sm:w-48 py-1 md:mr-4">
+      <div className="w-full lg:w-8/12 flex flex-row flex-wrap">
+        <div className="w-full sm:w-48 py-1 md:mx-4">
           <label className={labelVars}>Genre:</label>
           <select className={cssVars}>
             <option>All genres</option>
