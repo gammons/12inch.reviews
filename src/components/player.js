@@ -91,10 +91,12 @@ const Player = (props: Props) => {
 
   const onTogglePlay = () => {
     if (!isPlaying) {
-      spotifyPlayer.play(props.uri, trackNum, position).then(() => {
-        setIsPlaying(!isPlaying)
-        progressTick()
-      })
+      spotifyPlayer
+        .play(`spotify:album:${props.uri}`, trackNum, position)
+        .then(() => {
+          setIsPlaying(!isPlaying)
+          progressTick()
+        })
     } else {
       spotifyPlayer.pause().then(() => setIsPlaying(!isPlaying))
     }
