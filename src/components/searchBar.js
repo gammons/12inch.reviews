@@ -1,5 +1,5 @@
 // @flow
-import React from "react"
+import React, { useState } from "react"
 
 import Button from "./button"
 
@@ -7,6 +7,13 @@ const SearchBar = props => {
   const cssVars =
     "border-2 border-gray-300 bg-white h-12 px-5 text-gray-700 rounded-lg focus:outline-none w-full md:w-48"
   const labelVars = "text-gray-500 block text-xs uppercase font-bold"
+
+  const [searchValue, setSearchValue] = useState("")
+
+  const onChangeSearch = ev => {
+    setSearchValue(ev.target.value)
+  }
+
   return (
     <div className="w-full bg-gray-200 p-4 px-8 flex flex-row flex-wrap">
       <div className="w-full lg:w-4/12 py-1">
@@ -15,6 +22,8 @@ const SearchBar = props => {
           className="border-2 border-gray-300 bg-white h-12 px-5 text-gray-700 rounded-lg focus:outline-none w-full"
           type="search"
           placeholder="Artist or album"
+          value={searchValue}
+          onChange={onChangeSearch}
         />
       </div>
 
