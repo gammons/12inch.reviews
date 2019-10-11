@@ -46,6 +46,8 @@ const App = () => {
     }
   }, [])
 
+  console.log("playingAlbumURI = ", playingAlbumURI)
+
   return (
     <div className="flex flex-col items-stretch min-h-screen">
       <Header onSpotifyLoginClick={onSpotifyLoginClick} />

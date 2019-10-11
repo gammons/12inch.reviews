@@ -82,6 +82,13 @@ const Player = (props: Props) => {
     }
   })
 
+  React.useEffect(() => {
+    console.log("effect")
+    if (props.uri && isReady) {
+      onTogglePlay()
+    }
+  }, [props.uri])
+
   const onTogglePlay = () => {
     if (!isPlaying) {
       spotifyPlayer.play(props.uri, trackNum, position).then(() => {
