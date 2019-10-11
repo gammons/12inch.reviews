@@ -1,7 +1,7 @@
 // @flow
 
 // URLs
-export const PROD_FUNCTIONS_URL = ""
+export const PROD_FUNCTIONS_URL = "https://12inch.reviews"
 export const LOCAL_FUNCTIONS_URL = "http://localhost:9000"
 export const FUNCTIONS_URL =
   process.env.NODE_ENV === "development"
