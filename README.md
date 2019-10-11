@@ -1,30 +1,24 @@
-# TODO
+# 12inch.reviews
 
-**header**
-* [x] find record svg
-* [x] make simple header
-* [x] make responsive
+This is the source code to [12inch.reviews][reviews].
 
-**login**
-* [ ] login with spotify modal
-* [ ] netlify function running locally and in prod
+**Tech used:**
+* create-react-app
+* Netlify functions
+* Spotify web SDK
+* A simple ruby library to utilize [Pitchfork][pf]'s API
 
-**albums**
-* [x] display genre somewhere
-* [x] make responsive / mobile friendly
+[reviews]: https://12inch.reviews
+[pf]: https://pitchfork.com
 
-**app**
-* [ ] define routing
-* [ ] wire up searching 
-* [ ] piece everything together
-* [ ] small json payload to start, load larger payload once app is up
+## Serving the spotify login netlify function locally:
 
-**misc**
-* [x] register domain name
-* [ ] favicon
+```
+export SPOTIFY_CLIENT_ID=asdf1234
+export SPOTIFY_CLIENT_SECRET=asdf1234
+export NODE_ENV=development
+npx netlify-lambda serve .netlify/functions/
+```
 
-**search**
-* [x] by name
-* [x] by genre
-* [x] by rating
-* [x] responsive
+
+
