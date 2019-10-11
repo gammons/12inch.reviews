@@ -39,8 +39,7 @@ const App = () => {
   }, [])
 
   useEffect(() => {
-    const token =
-      window.localStorage.getItem("accessToken") || getUrlParam("accessToken")
+    const token = getUrlParam("accessToken")
     if (token) {
       setUser(new UserModel({ accessToken: token }))
     }
