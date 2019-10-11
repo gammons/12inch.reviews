@@ -69,7 +69,7 @@ const Player = (props: Props) => {
 
   React.useEffect(() => {
     if (window.Spotify) {
-      if (!isReady) {
+      if (!isReady && props.accessToken) {
         setupPlayer()
       }
       setIsReady(true)
@@ -83,7 +83,6 @@ const Player = (props: Props) => {
   })
 
   React.useEffect(() => {
-    console.log("effect")
     if (props.uri && isReady) {
       onTogglePlay()
     }
