@@ -52,7 +52,7 @@ const App = () => {
 
       <SearchBar />
 
-      <div className="flex-grow flex flex-row flex-wrap bg-gray-100 p-8">
+      <div className="flex-grow flex flex-row flex-wrap bg-gray-100 p-8 justify-center">
         {albums.map((album, count) => (
           <Album key={count} album={album} onPlay={setPlayingAlbumURI} />
         ))}
