@@ -6,7 +6,7 @@ const Button = props => {
     <div>
       <button
         onClick={props.onClick}
-        class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded"
+        className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded"
       >
         {props.children}
       </button>

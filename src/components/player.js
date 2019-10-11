@@ -1,7 +1,6 @@
 // @flow
 import React, { useState, useRef } from "react"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { icon } from "@fortawesome/fontawesome-svg-core"
 import {
   faStepForward,
   faStepBackward
@@ -13,7 +12,12 @@ import ProgressBar from "./player/progressBar"
 
 let timer
 
-const Player = props => {
+type Props = {
+  accessToken: string,
+  uri: string | null
+}
+
+const Player = (props: Props) => {
   const [isReady, setIsReady] = useState(false)
   const [isPlaying, setIsPlaying] = useState(false)
   const [spotifyPlayer, setSpotifyPlayer] = useState(null)

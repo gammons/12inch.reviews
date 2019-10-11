@@ -3,9 +3,11 @@ import React from "react"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faPlay, faBookOpen } from "@fortawesome/free-solid-svg-icons"
 
+import AlbumModel from "../models/user"
+
 const HighRating = 8
 
-const Rating = props => {
+const Rating = (props: { rating: number }) => {
   if (props.rating >= HighRating) {
     return <span className="font-bold text-red-600">{props.rating}</span>
   } else {
@@ -13,7 +15,12 @@ const Rating = props => {
   }
 }
 
-const Album = props => {
+type Props = {
+  album: AlbumModel,
+  onPlay: (albumId: string) => void
+}
+
+const Album = (props: Props) => {
   const album = props.album
 
   const onPlayAlbum = () => {

@@ -4,8 +4,14 @@ import React from "react"
 import "./header/styles.css"
 
 import SpotifyLoginButton from "./login/spotifyLoginButton"
+import UserModel from "../models/user"
 
-const Header = props => {
+type Props = {
+  onSpotifyLoginClick: () => void,
+  user?: UserModel
+}
+
+const Header = (props: Props) => {
   return (
     <div className="w-full bg-gray-200 px-8 p-2 overflow-hidden border-b-1 border-gray-400 shadow flex flex-row flex-wrap justify-between items-center">
       <div className="flex flex-row items-center m-auto sm:m-0">
@@ -19,7 +25,9 @@ const Header = props => {
         </h1>
       </div>
       <div className="p-4 md:p-0 m-auto sm:m-0">
-        {props.user ? null : <SpotifyLoginButton />}
+        {!props.user && (
+          <SpotifyLoginButton onClick={props.onSpotifyLoginClick} />
+        )}
       </div>
     </div>
   )
