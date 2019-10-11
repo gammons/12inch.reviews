@@ -6,9 +6,9 @@ exports.handler = async (event, context, callback) => {
   console.log("NODE_ENV = ", process.env.CONTEXT)
 
   const url =
-    process.env.NODE_ENV === "production"
-      ? "https://12inch.reviews"
-      : "http://localhost:9000"
+    process.env.NODE_ENV === "development"
+      ? "http://localhost:9000"
+      : "https://12inch.reviews"
   const redirectUrl = url + "/.netlify/functions/spotifyLogin"
 
   console.log("redirectUrl = ", redirectUrl)
