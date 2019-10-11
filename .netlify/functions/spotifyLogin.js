@@ -7,7 +7,7 @@ exports.handler = async (event, context, callback) => {
 
   const url =
     process.env.NODE_ENV === "development"
-      ? "http://localhost:9000"
+      ? "http://localhost:3000"
       : "https://12inch.reviews"
   const redirectUrl = url + "/.netlify/functions/spotifyLogin"
 
@@ -40,7 +40,7 @@ exports.handler = async (event, context, callback) => {
     statusCode: 301,
     body: "",
     headers: {
-      Location: `http://localhost:3000?accessToken=${data.access_token}`
+      Location: `${url}?accessToken=${data.access_token}`
     }
   })
 }
