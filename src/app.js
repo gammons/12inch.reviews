@@ -39,9 +39,11 @@ const App = () => {
   }, [])
 
   useEffect(() => {
-    const token = getUrlParam("accessToken")
-    if (token) {
-      setUser(new UserModel({ accessToken: token }))
+    const accessToken = getUrlParam("accessToken")
+    const refreshToken = getUrlParam("refreshToken")
+    const expiresIn = getUrlParam("expiresIn")
+    if (accessToken) {
+      setUser(new UserModel({ accessToken, refreshToken, expiresIn }))
     }
   }, [])
 

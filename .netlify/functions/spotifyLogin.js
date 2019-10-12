@@ -32,10 +32,12 @@ exports.handler = async (event, context, callback) => {
 
   const data = await resp.json()
 
+  const redirectArgs = `accessToken=${data.access_token}&refreshToken=${data.refresh_token}&expires_in=${data.expires_in}`
+
   const frontendURL =
     process.env.NODE_ENV === "development"
-      ? `http://localhost:3000?accessToken=${data.access_token}`
-      : `https://12inch.reviews?accessToken=${data.access_token}`
+      ? `http://localhost:3000?${redirectArgs}`
+      : `https://12inch.reviews?${redirectArgs}`
 
   callback(null, {
     statusCode: 301,
