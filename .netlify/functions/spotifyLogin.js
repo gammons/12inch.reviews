@@ -7,11 +7,9 @@ exports.handler = async (event, context, callback) => {
 
   const url =
     process.env.NODE_ENV === "development"
-      ? "http://localhost:3000"
+      ? "http://localhost:9000"
       : "https://12inch.reviews"
   const redirectUrl = url + "/.netlify/functions/spotifyLogin"
-
-  console.log("redirectUrl = ", redirectUrl)
 
   const args = []
   args.push("grant_type=authorization_code")
@@ -34,13 +32,16 @@ exports.handler = async (event, context, callback) => {
 
   const data = await resp.json()
 
-  console.log("data = ", data)
+  const frontendURL =
+    process.env.NODE_ENV === "development"
+      ? `http://localhost:3000?accessToken=${data.access_token}`
+      : `https://12inch.reviews?accessToken=${data.access_token}`
 
   callback(null, {
     statusCode: 301,
     body: "",
     headers: {
-      Location: `${url}?accessToken=${data.access_token}`
+      Location: frontendURL
     }
   })
 }
