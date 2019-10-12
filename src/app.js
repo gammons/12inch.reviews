@@ -62,7 +62,10 @@ const App = () => {
       </div>
 
       <div className="fixed w-full bottom-0 border-t border-gray-400">
-        <Player uri={playingAlbumURI} accessToken={user.accessToken} />
+        <Player
+          uri={`spotify:album:${playingAlbumURI}`}
+          accessToken={user.accessToken}
+        />
         <Footer />
       </div>
     </div>
