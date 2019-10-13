@@ -4,7 +4,7 @@ export default class Album {
   id: string
   timestamp: number
   title: string
-  artistName: string
+  artist: string
   rating: string
   bnm: boolean
   bnr: boolean

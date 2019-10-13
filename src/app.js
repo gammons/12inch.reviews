@@ -1,5 +1,5 @@
 // @flow
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, useRef } from "react"
 
 import Album from "./components/album"
 import AlbumModel from "./models/album"
@@ -10,6 +10,8 @@ import Header from "./components/header"
 import SearchBar from "./components/searchBar"
 import Player from "./components/player"
 import Footer from "./components/footer"
+
+import AlbumSearch from "./services/search"
 
 const redirectUrl = constants.FUNCTIONS_URL + "/.netlify/functions/spotifyLogin"
 
@@ -26,7 +28,8 @@ const onSpotifyLoginClick = () => {
 }
 
 const App = () => {
-  const [albums, setAlbums] = useState([])
+  const albums = useRef([])
+  const [filteredAlbums, setFilteredAlbums] = useState([])
   const [user, setUser] = useState(new UserModel())
   const [playingAlbumURI, setPlayingAlbumURI] = useState(null)
 
@@ -34,7 +37,9 @@ const App = () => {
     fetch("first-albums.json")
       .then(data => data.json())
       .then(data => {
-        setAlbums(data.albums.map(a => new AlbumModel(a)))
+        const al = data.albums.map(a => new AlbumModel(a))
+        albums.current = al
+        setFilteredAlbums(al)
       })
   }, [])
 
@@ -47,6 +52,10 @@ const App = () => {
     }
   }, [])
 
+  const onSearch = search => {
+    setFilteredAlbums(AlbumSearch(albums.current, search))
+  }
+
   return (
     <div className="flex flex-col items-stretch min-h-screen">
       <Header
@@ -54,10 +63,10 @@ const App = () => {
         onSpotifyLoginClick={onSpotifyLoginClick}
       />
 
-      <SearchBar />
+      <SearchBar onSearch={onSearch} />
 
       <div className="flex-grow flex flex-row flex-wrap bg-gray-100 p-8 justify-center">
-        {albums.map((album, count) => (
+        {filteredAlbums.map((album, count) => (
           <Album
             playDisabled={user.accessToken === null}
             key={count}
