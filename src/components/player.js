@@ -148,9 +148,12 @@ const Player = (props: Props) => {
       />
 
       <div className="flex flex-row flex-wrap w-full">
-        <div className="w-full pl-32 relative md:absolute">
-          <ArtistAndTrack artist={artist} trackTitle={trackTitle} />
-          <p className="font-bold text-gray-600">{album}</p>
+        <div className="pl-32 relative md:absolute">
+          <ArtistAndTrack
+            artist={artist}
+            trackTitle={trackTitle}
+            album={album}
+          />
         </div>
 
         <div className="w-full flex justify-center items-center pl-32 md:pl-0">

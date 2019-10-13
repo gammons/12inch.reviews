@@ -6,7 +6,9 @@ const tokenRefresh = async refreshToken => {
     }
   )
 
-  return JSON.parse(await resp.text()).access_token
+  const json = await resp.json()
+
+  return json
 }
 
 export default tokenRefresh

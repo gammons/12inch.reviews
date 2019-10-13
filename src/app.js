@@ -15,6 +15,7 @@ import AlbumSearch from "./services/search"
 import tokenRefresh from "./services/tokenRefresher"
 
 const redirectUrl = constants.FUNCTIONS_URL + "/.netlify/functions/spotifyLogin"
+const fiftyMinutes = 1000 * 60 * 50
 
 const onSpotifyLoginClick = () => {
   const args = []
@@ -32,6 +33,7 @@ const App = () => {
   const albums = useRef([])
   const [filteredAlbums, setFilteredAlbums] = useState([])
   const [user, setUser] = useState(new UserModel())
+  const [refreshToken, setRefreshToken] = useState(getUrlParam("refreshToken"))
   const [playingAlbumURI, setPlayingAlbumURI] = useState(null)
 
   useEffect(() => {
@@ -46,15 +48,21 @@ const App = () => {
 
   useEffect(() => {
     const accessToken = getUrlParam("accessToken")
-    const refreshToken = getUrlParam("refreshToken")
     const expiresIn = getUrlParam("expiresIn")
+
     if (accessToken) {
-      setTimeout(() => {
-        tokenRefresh(refreshToken)
-      }, 5000)
+      setTimeout(refreshAccessToken, fiftyMinutes)
       setUser(new UserModel({ accessToken, refreshToken, expiresIn }))
     }
   }, [])
+
+  const refreshAccessToken = async () => {
+    const refreshed = await tokenRefresh(refreshToken)
+    user.accessToken = refreshed.access_token
+    user.refreshToken = refreshed.refresh_token
+    setUser(user)
+    setTimeout(refreshAccessToken, fiftyMinutes)
+  }
 
   const onSearch = search => {
     setFilteredAlbums(AlbumSearch(albums.current, search))
