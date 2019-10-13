@@ -47,25 +47,28 @@ const App = () => {
     }
   }, [])
 
-  console.log("playingAlbumURI = ", playingAlbumURI)
-
   return (
     <div className="flex flex-col items-stretch min-h-screen">
-      <Header onSpotifyLoginClick={onSpotifyLoginClick} />
+      <Header
+        user={user.accessToken}
+        onSpotifyLoginClick={onSpotifyLoginClick}
+      />
 
       <SearchBar />
 
       <div className="flex-grow flex flex-row flex-wrap bg-gray-100 p-8 justify-center">
         {albums.map((album, count) => (
-          <Album key={count} album={album} onPlay={setPlayingAlbumURI} />
+          <Album
+            playDisabled={user.accessToken === null}
+            key={count}
+            album={album}
+            onPlay={setPlayingAlbumURI}
+          />
         ))}
       </div>
 
       <div className="fixed w-full bottom-0 border-t border-gray-400">
-        <Player
-          uri={`spotify:album:${playingAlbumURI}`}
-          accessToken={user.accessToken}
-        />
+        <Player uri={playingAlbumURI} accessToken={user.accessToken} />
         <Footer />
       </div>
     </div>

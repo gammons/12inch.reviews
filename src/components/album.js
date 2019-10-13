@@ -17,6 +17,7 @@ const Rating = (props: { rating: number }) => {
 
 type Props = {
   album: AlbumModel,
+  playDisabled: boolean,
   onPlay: (albumId: string) => void
 }
 
@@ -62,7 +63,10 @@ const Album = (props: Props) => {
           </div>
 
           <div className="p-4 flex flex-row justify-around text-gray-700">
-            <a className="cursor-pointer" onClick={onPlayAlbum}>
+            <a
+              className={props.disabled ? "text-gray-500" : "cursor-pointer"}
+              onClick={onPlayAlbum}
+            >
               <FontAwesomeIcon icon={faPlay} />{" "}
               <span className="hidden md:inline">Play album</span>
             </a>

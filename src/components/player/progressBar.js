@@ -12,7 +12,7 @@ const ProgressBar = props => {
 
   return (
     <div
-      className="border border-gray-400 shadow w-full rounded-sm"
+      className="border border-gray-400 shadow w-full rounded-sm cursor-pointer"
       onClick={onClick}
       ref={r => (bar = r)}
     >

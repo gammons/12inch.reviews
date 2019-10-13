@@ -27,13 +27,14 @@ const Player = (props: Props) => {
   positionRef.current = position
 
   const [trackNum, setTrackNum] = useState(0)
-  const [artist, setArtist] = useState("No Artist")
-  const [album, setAlbum] = useState("No album")
-  const [trackTitle, setTrackTitle] = useState("No track")
+  const [artist, setArtist] = useState("")
+  const [album, setAlbum] = useState("")
+  const [trackTitle, setTrackTitle] = useState("")
   const [trackDuration, setTrackDuration] = useState(0)
-  const [albumImageURL, setAlbumImageURL] = useState(
-    "https://i.scdn.co/image/75e90ce91798e339ccee3835267f0918acb98700"
-  )
+  const [albumImageURL, setAlbumImageURL] = useState("")
+
+  let uri = null
+  if (props.uri !== null) uri = `spotify:album:${props.uri}`
 
   const setupPlayer = () => {
     const aPlayer = new window.Spotify.Player({
@@ -83,14 +84,14 @@ const Player = (props: Props) => {
   })
 
   React.useEffect(() => {
-    if (props.uri && isReady) {
+    if (uri && isReady) {
       onTogglePlay()
     }
-  }, [props.uri])
+  }, [uri])
 
   const onTogglePlay = () => {
     if (!isPlaying) {
-      spotifyPlayer.play(props.uri, trackNum, position).then(() => {
+      spotifyPlayer.play(uri, trackNum, position).then(() => {
         setIsPlaying(!isPlaying)
         progressTick()
       })
@@ -101,7 +102,7 @@ const Player = (props: Props) => {
 
   const onRequestNextTrack = () => {
     if (isPlaying) {
-      spotifyPlayer.play(props.uri, trackNum + 1, 0)
+      spotifyPlayer.play(uri, trackNum + 1, 0)
     }
     setPosition(0)
     setTrackNum(trackNum + 1)
@@ -111,7 +112,7 @@ const Player = (props: Props) => {
     if (trackNum == 0) return
 
     if (isPlaying) {
-      spotifyPlayer.play(props.uri, trackNum - 1, 0)
+      spotifyPlayer.play(uri, trackNum - 1, 0)
     }
     setPosition(0)
     setTrackNum(trackNum - 1)
@@ -126,39 +127,48 @@ const Player = (props: Props) => {
     const newPosition = trackDuration * percentage
     setPosition(newPosition)
     if (isPlaying) {
-      spotifyPlayer.play(props.uri, trackNum, newPosition)
+      spotifyPlayer.play(uri, trackNum, newPosition)
     }
   }
 
   return (
-    <div className="w-full bg-gray-200 border-t-1 border-gray-400 shadow flex flex-row px-8 py-2">
+    <div className="w-full bg-gray-200 border-t-1 border-gray-400 shadow flex flex-row pt-2 px-8 h-40">
       <div
-        className="h-40 w-40 flex-none bg-cover rounded-t lg:rounded-t-none md:rounded-l text-center overflow-hidden"
+        className="absolute h-32 w-32 bg-cover rounded overflow-hidden bg-gray-500"
         style={{ backgroundImage: `url(${albumImageURL})` }}
       />
 
-      <div className="w-full md:w-4/5">
-        <div className="p-4">
+      <div className="flex flex-row flex-wrap w-full">
+        <div className="w-full pl-40 relative md:absolute">
           <div className="text-lg font-bold">
-            <span>{artist}</span>
-            <span className="hidden md:inline"> - </span>
-            <span className="hidden md:inline">{trackTitle}</span>
+            {artist} - {trackTitle}
           </div>
-          <p className="font-bold block md:hidden">{trackTitle}</p>
           <p className="font-bold text-gray-600">{album}</p>
         </div>
 
-        <div className="w-full md:w-3/5 px-1 md:px-4">
-          <div className="w-full flex flex-row justify-around items-center mb-4">
-            <PrevTrackButton onClick={onRequestPrevTrack} />
-            <PlayButton isPlaying={isPlaying} onClick={onTogglePlay} />
-            <NextTrackButton onClick={onRequestNextTrack} />
-          </div>
+        <div className="w-full flex justify-center items-center pl-40 md:pl-0">
+          <div className="w-full md:w-1/3">
+            <div className="w-full flex flex-row justify-around items-center mb-4">
+              <PrevTrackButton
+                disabled={uri === null}
+                onClick={onRequestPrevTrack}
+              />
+              <PlayButton
+                disabled={uri === null}
+                isPlaying={isPlaying}
+                onClick={onTogglePlay}
+              />
+              <NextTrackButton
+                disabled={uri === null}
+                onClick={onRequestNextTrack}
+              />
+            </div>
 
-          <ProgressBar
-            percentage={position / trackDuration}
-            onClick={progressClick}
-          />
+            <ProgressBar
+              percentage={position / trackDuration}
+              onClick={progressClick}
+            />
+          </div>
         </div>
       </div>
     </div>
@@ -167,7 +177,12 @@ const Player = (props: Props) => {
 
 const NextTrackButton = props => {
   return (
-    <a className="text-2xl" onClick={props.onClick}>
+    <a
+      className={`text-2xl ${
+        props.disabled ? "text-gray-500" : "cursor-pointer"
+      }`}
+      onClick={props.onClick}
+    >
       <FontAwesomeIcon icon={faStepForward} />
     </a>
   )
@@ -175,7 +190,12 @@ const NextTrackButton = props => {
 
 const PrevTrackButton = props => {
   return (
-    <a className="text-2xl" onClick={props.onClick}>
+    <a
+      className={`text-2xl ${
+        props.disabled ? "text-gray-500" : "cursor-pointer"
+      }`}
+      onClick={props.onClick}
+    >
       <FontAwesomeIcon icon={faStepBackward} />
     </a>
   )
