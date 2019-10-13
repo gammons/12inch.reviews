@@ -1,14 +1,12 @@
 // @flow
 import React, { useState, useRef } from "react"
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import {
-  faStepForward,
-  faStepBackward
-} from "@fortawesome/free-solid-svg-icons"
 
 import SpotifyPlayer from "../models/spotifyPlayer"
 import PlayButton from "./player/playButton"
 import ProgressBar from "./player/progressBar"
+import NextTrackButton from "./player/nextTrackButton"
+import PrevTrackButton from "./player/prevTrackButton"
+import ArtistAndTrack from "./player/artistAndTrack"
 
 let timer
 
@@ -81,13 +79,21 @@ const Player = (props: Props) => {
     if (!isPlaying) {
       clearTimeout(timer)
     }
-  })
+  }, [timer])
 
   React.useEffect(() => {
     if (uri && isReady) {
-      onTogglePlay()
+      onStartPlay()
     }
   }, [uri])
+
+  const onStartPlay = () => {
+    clearTimeout(timer)
+    spotifyPlayer.play(uri, 0, 0).then(() => {
+      progressTick()
+      setIsPlaying(true)
+    })
+  }
 
   const onTogglePlay = () => {
     if (!isPlaying) {
@@ -96,7 +102,10 @@ const Player = (props: Props) => {
         progressTick()
       })
     } else {
-      spotifyPlayer.pause().then(() => setIsPlaying(!isPlaying))
+      spotifyPlayer.pause().then(() => {
+        setIsPlaying(!isPlaying)
+        clearTimeout(timer)
+      })
     }
   }
 
@@ -140,9 +149,7 @@ const Player = (props: Props) => {
 
       <div className="flex flex-row flex-wrap w-full">
         <div className="w-full pl-40 relative md:absolute">
-          <div className="text-lg font-bold">
-            {artist} - {trackTitle}
-          </div>
+          <ArtistAndTrack artist={artist} trackTitle={trackTitle} />
           <p className="font-bold text-gray-600">{album}</p>
         </div>
 
@@ -172,32 +179,6 @@ const Player = (props: Props) => {
         </div>
       </div>
     </div>
-  )
-}
-
-const NextTrackButton = props => {
-  return (
-    <a
-      className={`text-2xl ${
-        props.disabled ? "text-gray-500" : "cursor-pointer"
-      }`}
-      onClick={props.onClick}
-    >
-      <FontAwesomeIcon icon={faStepForward} />
-    </a>
-  )
-}
-
-const PrevTrackButton = props => {
-  return (
-    <a
-      className={`text-2xl ${
-        props.disabled ? "text-gray-500" : "cursor-pointer"
-      }`}
-      onClick={props.onClick}
-    >
-      <FontAwesomeIcon icon={faStepBackward} />
-    </a>
   )
 }
 

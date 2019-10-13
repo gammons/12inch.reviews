@@ -3,7 +3,7 @@ import React from "react"
 
 const Footer = props => {
   return (
-    <div className="w-full bg-blue-100 px-8 p-2 border-b-1 border-gray-400 shadow flex flex-row justify-center items-center">
+    <div className="hidden sm:block w-full bg-blue-100 px-8 p-2 border-b-1 border-gray-400 shadow flex flex-row justify-center items-center">
       <p>
         A simple,{" "}
         <a

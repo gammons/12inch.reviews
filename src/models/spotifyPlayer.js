@@ -1,8 +1,10 @@
 // @flow
 
 export default class SpotifyPlayer {
-  constructor(deviceID, accessToken) {
-    console.log("init new SpotifyPlayer with ", deviceID, accessToken)
+  accessToken: string
+  deviceID: string
+
+  constructor(deviceID: string, accessToken: string) {
     this.deviceID = deviceID
     this.accessToken = accessToken
   }
@@ -17,7 +19,7 @@ export default class SpotifyPlayer {
     })
   }
 
-  play(uri, trackNum, position) {
+  play(uri: string, trackNum: number, position: number) {
     return fetch(
       `https://api.spotify.com/v1/me/player/play?device_id=${this.deviceID}`,
       {
