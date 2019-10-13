@@ -77,8 +77,8 @@ const App = () => {
 
       <SearchBar onSearch={onSearch} />
 
-      <div className="flex-grow flex flex-row flex-wrap bg-gray-100 p-8 justify-center">
-        {filteredAlbums.map((album, count) => (
+      <div className="flex-grow flex flex-row flex-wrap bg-gray-100 p-8 justify-center pb-48">
+        {filteredAlbums.slice(0, 10).map((album, count) => (
           <Album
             playDisabled={user.accessToken === null}
             key={count}
