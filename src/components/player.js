@@ -141,19 +141,19 @@ const Player = (props: Props) => {
   }
 
   return (
-    <div className="w-full bg-gray-200 border-t-1 border-gray-400 shadow flex flex-row pt-2 px-8 h-40">
+    <div className="w-full bg-gray-200 border-t-1 border-gray-400 shadow flex flex-row pt-2 px-8 h-32">
       <div
-        className="absolute h-32 w-32 bg-cover rounded overflow-hidden bg-gray-500"
+        className="absolute h-24 w-24 bg-cover rounded overflow-hidden bg-gray-500"
         style={{ backgroundImage: `url(${albumImageURL})` }}
       />
 
       <div className="flex flex-row flex-wrap w-full">
-        <div className="w-full pl-40 relative md:absolute">
+        <div className="w-full pl-32 relative md:absolute">
           <ArtistAndTrack artist={artist} trackTitle={trackTitle} />
           <p className="font-bold text-gray-600">{album}</p>
         </div>
 
-        <div className="w-full flex justify-center items-center pl-40 md:pl-0">
+        <div className="w-full flex justify-center items-center pl-32 md:pl-0">
           <div className="w-full md:w-1/3">
             <div className="w-full flex flex-row justify-around items-center mb-4">
               <PrevTrackButton
