@@ -20,10 +20,8 @@ exports.handler = async (event, context, callback) => {
     }
   })
 
-  const data = await resp.json()
-
   callback(null, {
     statusCode: 200,
-    body: JSON.stringify(data)
+    body: await resp.text()
   })
 }

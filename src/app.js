@@ -12,6 +12,7 @@ import Player from "./components/player"
 import Footer from "./components/footer"
 
 import AlbumSearch from "./services/search"
+import tokenRefresh from "./services/tokenRefresher"
 
 const redirectUrl = constants.FUNCTIONS_URL + "/.netlify/functions/spotifyLogin"
 
@@ -48,6 +49,9 @@ const App = () => {
     const refreshToken = getUrlParam("refreshToken")
     const expiresIn = getUrlParam("expiresIn")
     if (accessToken) {
+      setTimeout(() => {
+        tokenRefresh(refreshToken)
+      }, 5000)
       setUser(new UserModel({ accessToken, refreshToken, expiresIn }))
     }
   }, [])
