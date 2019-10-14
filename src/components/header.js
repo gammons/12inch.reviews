@@ -4,11 +4,10 @@ import React from "react"
 import "./header/styles.css"
 
 import SpotifyLoginButton from "./login/spotifyLoginButton"
-import UserModel from "../models/user"
 
 type Props = {
   onSpotifyLoginClick: () => void,
-  user?: UserModel
+  token?: string
 }
 
 const Header = (props: Props) => {

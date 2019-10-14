@@ -1,5 +1,6 @@
 // @flow
 import React, { useState, useEffect, useRef } from "react"
+import { useBottomScrollListener } from "react-bottom-scroll-listener"
 
 import Album from "./components/album"
 import AlbumModel from "./models/album"
@@ -33,11 +34,11 @@ const App = () => {
   const albums = useRef([])
   const [filteredAlbums, setFilteredAlbums] = useState([])
   const [user, setUser] = useState(new UserModel())
-  const [refreshToken, setRefreshToken] = useState(getUrlParam("refreshToken"))
   const [playingAlbumURI, setPlayingAlbumURI] = useState(null)
+  const [albumCount, setAlbumCount] = useState(10)
 
   useEffect(() => {
-    fetch("first-albums.json")
+    fetch("albums.json")
       .then(data => data.json())
       .then(data => {
         const al = data.albums.map(a => new AlbumModel(a))
@@ -48,6 +49,7 @@ const App = () => {
 
   useEffect(() => {
     const accessToken = getUrlParam("accessToken")
+    const refreshToken = getUrlParam("refreshToken")
     const expiresIn = getUrlParam("expiresIn")
 
     if (accessToken) {
@@ -56,8 +58,12 @@ const App = () => {
     }
   }, [])
 
+  useBottomScrollListener(() => {
+    setAlbumCount(albumCount + 10)
+  })
+
   const refreshAccessToken = async () => {
-    const refreshed = await tokenRefresh(refreshToken)
+    const refreshed = await tokenRefresh(user.refreshToken)
     user.accessToken = refreshed.access_token
     user.refreshToken = refreshed.refresh_token
     setUser(user)
@@ -78,7 +84,7 @@ const App = () => {
       <SearchBar onSearch={onSearch} />
 
       <div className="flex-grow flex flex-row flex-wrap bg-gray-100 p-8 justify-center pb-48">
-        {filteredAlbums.slice(0, 10).map((album, count) => (
+        {filteredAlbums.slice(0, albumCount).map((album, count) => (
           <Album
             playDisabled={user.accessToken === null}
             key={count}
