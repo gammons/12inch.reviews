@@ -6,8 +6,8 @@ require_relative "album"
 class Pitchfork
   PER_PAGE = 25
 
-  def get_albums(start_at = 0)
-    resp = JSON.parse(HTTP.get("https://pitchfork.com/api/v2/search/?types=reviews&hierarchy=sections%2Freviews%2Falbums%2Cchannels%2Freviews%2Falbums&sort=publishdate%20desc%2Cposition%20asc&size=#{PER_PAGE}&start=#{start_at}"))
+  def get_albums(page = 0)
+    resp = JSON.parse(HTTP.get("https://pitchfork.com/api/v2/search/?types=reviews&hierarchy=sections%2Freviews%2Falbums%2Cchannels%2Freviews%2Falbums&sort=publishdate%20desc&size=#{PER_PAGE}&start=#{page * PER_PAGE}"))
 
     albums = resp["results"]["list"].map do |result|
       album = Album.new

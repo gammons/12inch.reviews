@@ -24,6 +24,11 @@ class Retriever
     puts @spotify.authorize
   end
 
+  def test
+    album = @spotify.search("Debby Friday", "Death Drive EP")
+    puts "album = '#{album && album["name"]}'"
+  end
+
   def perform
     fetch_albums
     post_process
@@ -36,13 +41,13 @@ class Retriever
 
   def fetch_albums
     @albums = []
-    (0..3).each do |page|
+    (0..20).each do |page|
       new_albums = Pitchfork.new.get_albums(page)
       new_albums.each do |album|
-        album.spotify_artist_id = @spotify.get_artist_id(album.artist)
-        spotify_album = @spotify.get_album(album.spotify_artist_id, album.title)
+        spotify_album = @spotify.search(album.artist, album.title)
 
         unless spotify_album.nil?
+          album.spotify_artist_id = spotify_album["artists"][0]["id"]
           album.spotify_album_id = spotify_album["id"]
           album.image_url = spotify_album["images"][0]["url"]
         end

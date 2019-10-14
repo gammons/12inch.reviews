@@ -8,17 +8,27 @@ class Spotify
     @logger = logger
   end
 
+  def search(artist_name, album_name)
+    artist_name = filter_string(artist_name)
+    album_name = filter_string(album_name)
+
+    req = HTTP.headers("Authorization": "Bearer #{@access_token}").get("https://api.spotify.com/v1/search", params: {q: "artist:#{artist_name.downcase} album:#{album_name.downcase}", type: "album"})
+    resp = JSON.parse(req.body.to_s)
+    return resp["albums"] && resp["albums"]["items"] && resp["albums"]["items"][0]
+  end
+
   def get_artist_id(artist_name)
     req = HTTP.headers("Authorization": "Bearer #{@access_token}").get("https://api.spotify.com/v1/search", params: {q: artist_name, type: "artist"})
     @logger.debug("body is #{req.body}")
     resp = JSON.parse(req.body.to_s)
 
     spotify_artist_name = artist_name
-    if resp["artists"].class == Array
+    if resp["artists"].class == Array && artist_name.split(" ").size > 1
       spotify_artist_name = FuzzyMatch.new(resp["artists"].map {|r| r["name"] }, must_match_at_least_one_word: true).find(artist_name)
     end
 
     resp["artists"]["items"].each do |result|
+      puts "Artist = #{result["name"]}"
       if result["name"].downcase == spotify_artist_name.downcase
         return result["id"]
       end
@@ -30,12 +40,13 @@ class Spotify
   def get_album(artist_id, album_name)
     return nil if artist_id.nil?
 
-    url = "https://api.spotify.com/v1/artists/#{artist_id}/albums?offset=0&limit=50&include_groups=album"
+    url = "https://api.spotify.com/v1/artists/#{artist_id}/albums?offset=0&limit=50"
     req = HTTP.headers("Authorization": "Bearer #{@access_token}").get(url)
     @logger.debug("body is #{req.body}")
     resp = JSON.parse(req.body.to_s)
     spotify_album_name = FuzzyMatch.new(resp["items"].map {|r| r["name"] }, must_match_at_least_one_word: true).find(album_name)
     resp["items"].each do |result|
+      puts "Album = '#{result["name"]}'"
       if result["name"].downcase == (spotify_album_name || "").downcase
         return result
       end
@@ -50,4 +61,10 @@ class Spotify
     json["access_token"]
   end
 
+  def filter_string(string)
+    string
+      .sub(/&amp;/,"&")
+      .sub(/’/,"")
+      .sub(/ EP/,"")
+  end
 end
