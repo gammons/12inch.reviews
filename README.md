@@ -1,6 +1,6 @@
 # 12inch.reviews
 
-This is the source code to [12inch.reviews][reviews].
+This is the source code to [12inch.reviews][reviews].  This is a simple mash-up between Pitchfork reviews and the Spotify web sdk.
 
 **Tech used:**
 * create-react-app
@@ -11,14 +11,7 @@ This is the source code to [12inch.reviews][reviews].
 [reviews]: https://12inch.reviews
 [pf]: https://pitchfork.com
 
-## Serving the spotify login netlify function locally:
+## running locally
 
-```
-export SPOTIFY_CLIENT_ID=asdf1234
-export SPOTIFY_CLIENT_SECRET=asdf1234
-export NODE_ENV=development
-npx netlify-lambda serve .netlify/functions/
-```
-
-
-
+1. In order for the player to work, You'll need a `.env` file that includes `SPOTIFY_CLIENT_ID` and `SPOTIFY_CLIENT_SECRET`.
+2. `yarn && yarn start`
