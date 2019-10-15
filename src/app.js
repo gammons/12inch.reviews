@@ -35,7 +35,7 @@ const App = () => {
   const [filteredAlbums, setFilteredAlbums] = useState([])
   const userRef = useRef(new UserModel())
   const [playingAlbumURI, setPlayingAlbumURI] = useState(null)
-  const [albumCount, setAlbumCount] = useState(10)
+  const [albumCount, setAlbumCount] = useState(25)
 
   useEffect(() => {
     fetch("albums.json")
@@ -61,7 +61,7 @@ const App = () => {
 
   useBottomScrollListener(
     () => {
-      setAlbumCount(albumCount + 10)
+      setAlbumCount(albumCount + 25)
     },
     100,
     100
