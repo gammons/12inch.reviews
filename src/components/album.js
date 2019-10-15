@@ -17,7 +17,6 @@ const Rating = (props: { rating: number }) => {
 
 type Props = {
   album: AlbumModel,
-  playDisabled: boolean,
   onPlay: (albumId: string) => void
 }
 

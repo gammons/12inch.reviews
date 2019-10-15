@@ -67,6 +67,16 @@ const App = () => {
     100
   )
 
+  const onPlayAlbum = uri => {
+    if (userRef.current.accessToken) {
+      setPlayingAlbumURI(uri)
+    } else {
+      alert(
+        "In order to listen, you'll need to grant access to Spotify.  Please log into Spotify using the green button above!"
+      )
+    }
+  }
+
   const refreshAccessToken = async () => {
     const refreshed = await tokenRefresh(userRef.current.refreshToken)
     console.log("refreshed = ", refreshed)
@@ -94,12 +104,7 @@ const App = () => {
 
       <div className="flex-grow flex flex-row flex-wrap bg-gray-100 p-8 justify-center pb-48">
         {filteredAlbums.slice(0, albumCount).map((album, count) => (
-          <Album
-            playDisabled={userRef.current.accessToken === null}
-            key={count}
-            album={album}
-            onPlay={setPlayingAlbumURI}
-          />
+          <Album key={count} album={album} onPlay={onPlayAlbum} />
         ))}
       </div>
 
