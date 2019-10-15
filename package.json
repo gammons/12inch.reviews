@@ -20,7 +20,8 @@
   "scripts": {
     "build:css": "tailwind build src/styles/index.css -o src/styles/tailwind.css",
     "watch:css": "tailwind build src/styles/index.css -o src/styles/tailwind.css -w",
-    "start": "npm run watch:css && react-scripts start",
+    "netlify:serve": "netlify-lambda serve .netlify/functions",
+    "start": "npm run watch:css & npm run netlify:serve & react-scripts start",
     "build": "npm run build:css && react-scripts build && netlify-lambda build .netlify/functions",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
