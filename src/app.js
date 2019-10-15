@@ -15,7 +15,7 @@ import Footer from "./components/footer"
 import AlbumSearch from "./services/search"
 import tokenRefresh from "./services/tokenRefresher"
 
-const redirectUrl = constants.FUNCTIONS_URL + "/.netlify/functions/spotifyLogin"
+const redirectUrl = `${window.location.href}.netlify/functions/spotifyLogin`
 const fiftyMinutes = 1000 * 60 * 50
 
 const onSpotifyLoginClick = () => {

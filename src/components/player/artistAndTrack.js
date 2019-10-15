@@ -15,6 +15,7 @@ const ArtistAndTrack = (props: Props) => {
   return (
     <div className="text-lg font-bold">
       {val}
+      <br />
       <p className="inline font-bold text-gray-600">{props.album}</p>
     </div>
   )

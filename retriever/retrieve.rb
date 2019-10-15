@@ -18,6 +18,7 @@ class Retriever
     @logger = Logger.new(STDOUT)
     @logger.level = Logger::INFO
     @spotify = Spotify.new(ENV["SPOTIFY_CLIENT_ID"], ENV["SPOTIFY_CLIENT_SECRET"], @logger)
+    @albums = []
   end
 
   def access_token
@@ -25,11 +26,13 @@ class Retriever
   end
 
   def test
+    Pitchfork.new.get_albums(900)
     album = @spotify.search("Debby Friday", "Death Drive EP")
     puts "album = '#{album && album["name"]}'"
   end
 
   def perform
+    load_albums
     fetch_albums
     post_process
     write_results
@@ -39,10 +42,19 @@ class Retriever
 
   private
 
+  def load_albums
+    return unless File.exist?("temp_albums.json")
+
+    @albums = JSON.parse(File.read("temp_albums.json")).map do |album_h|
+      Album.new(album_h)
+    end
+  end
+
   def fetch_albums
-    @albums = []
-    (0..20).each do |page|
+    ((@albums.count / 25 + 1)..874).each do |page|
       new_albums = Pitchfork.new.get_albums(page)
+
+      puts page
       new_albums.each do |album|
         spotify_album = @spotify.search(album.artist, album.title)
 
@@ -54,9 +66,15 @@ class Retriever
 
         putc "."
         sleep 1
+
       end
+
       puts "\n"
       @albums += new_albums
+
+      aof = File.open("temp_albums.json", "w")
+      aof << JSON.generate(@albums.map(&:to_h))
+      aof.close
     end
     @albums
   end

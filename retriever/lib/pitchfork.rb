@@ -24,7 +24,7 @@ class Pitchfork
       album.rating = result["tombstone"]["albums"][0]["rating"]["display_rating"]
       album.bnm = result["tombstone"]["albums"][0]["rating"]["bnm"]
       album.bnr = result["tombstone"]["albums"][0]["rating"]["bnr"]
-      album.label = result["tombstone"]["albums"][0]["labels_and_years"][0]["labels"][0]["display_name"]
+      album.label = result["tombstone"]["albums"][0]["labels_and_years"][0]["labels"][0]["display_name"] rescue "Unknown"
       album.url = "https://pitchfork.com" + result["url"]
       album.description = result["socialDescription"]
 
