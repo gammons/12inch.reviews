@@ -73,8 +73,14 @@ const SearchBar = props => {
           >
             <option value="">All genres</option>
             <option>Electronic</option>
+            <option>Experimental</option>
+            <option>Folk/Country</option>
+            <option>Jazz</option>
+            <option>Metal</option>
+            <option>Pop/R&B</option>
             <option>Rap</option>
             <option>Rock</option>
+            <option>Unknown</option>
           </select>
         </div>
 
