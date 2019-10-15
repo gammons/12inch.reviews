@@ -4,7 +4,7 @@ import { useBottomScrollListener } from "react-bottom-scroll-listener"
 
 import Album from "./components/album"
 import AlbumModel from "./models/album"
-import UserModel from "./models/user"
+//import UserModel from "./models/user"
 
 import * as constants from "./constants"
 import Header from "./components/header"
@@ -33,9 +33,12 @@ const onSpotifyLoginClick = () => {
 const App = () => {
   const albums = useRef([])
   const [filteredAlbums, setFilteredAlbums] = useState([])
-  const userRef = useRef(new UserModel())
   const [playingAlbumURI, setPlayingAlbumURI] = useState(null)
+  const [accessToken, setAccessToken] = useState(null)
   const [albumCount, setAlbumCount] = useState(25)
+
+  const accessTokenRef = useRef(null)
+  const refreshToken = useRef(null)
 
   useEffect(() => {
     fetch("albums.json")
@@ -48,14 +51,14 @@ const App = () => {
   }, [])
 
   useEffect(() => {
-    const accessToken = getUrlParam("accessToken")
-    const refreshToken = getUrlParam("refreshToken")
-    const expiresIn = getUrlParam("expiresIn")
+    const _accessToken = getUrlParam("accessToken")
+    const _refreshToken = getUrlParam("refreshToken")
 
-    if (accessToken) {
+    if (_accessToken) {
+      accessTokenRef.current = _accessToken
+      refreshToken.current = _refreshToken
+      setAccessToken(_accessToken)
       setTimeout(refreshAccessToken, fiftyMinutes)
-      const u = new UserModel({ accessToken, refreshToken, expiresIn })
-      userRef.current = u
     }
   }, [])
 
@@ -68,7 +71,7 @@ const App = () => {
   )
 
   const onPlayAlbum = uri => {
-    if (userRef.current.accessToken) {
+    if (accessTokenRef.current) {
       setPlayingAlbumURI(uri)
     } else {
       alert(
@@ -78,12 +81,12 @@ const App = () => {
   }
 
   const refreshAccessToken = async () => {
-    const refreshed = await tokenRefresh(userRef.current.refreshToken)
-    console.log("refreshed = ", refreshed)
-    userRef.current.accessToken = refreshed.access_token
+    const refreshed = await tokenRefresh(refreshToken.current)
+    accessTokenRef.current = refreshed.access_token
+    setAccessToken(accessTokenRef.current)
 
     if (refreshed.refresh_token) {
-      userRef.current.refreshToken = refreshed.refresh_token
+      refreshToken.current = refreshed.refresh_token
     }
 
     setTimeout(refreshAccessToken, fiftyMinutes)
@@ -96,7 +99,7 @@ const App = () => {
   return (
     <div className="flex flex-col items-stretch min-h-screen">
       <Header
-        user={userRef.current.accessToken}
+        user={accessTokenRef.current}
         onSpotifyLoginClick={onSpotifyLoginClick}
       />
 
@@ -109,10 +112,7 @@ const App = () => {
       </div>
 
       <div className="fixed w-full bottom-0 border-t border-gray-400">
-        <Player
-          uri={playingAlbumURI}
-          accessToken={userRef.current.accessToken}
-        />
+        <Player uri={playingAlbumURI} accessToken={accessTokenRef.current} />
         <Footer />
       </div>
     </div>
