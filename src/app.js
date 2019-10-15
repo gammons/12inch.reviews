@@ -33,7 +33,7 @@ const onSpotifyLoginClick = () => {
 const App = () => {
   const albums = useRef([])
   const [filteredAlbums, setFilteredAlbums] = useState([])
-  const [user, setUser] = useState(new UserModel())
+  const userRef = useRef(new UserModel())
   const [playingAlbumURI, setPlayingAlbumURI] = useState(null)
   const [albumCount, setAlbumCount] = useState(10)
 
@@ -54,7 +54,8 @@ const App = () => {
 
     if (accessToken) {
       setTimeout(refreshAccessToken, fiftyMinutes)
-      setUser(new UserModel({ accessToken, refreshToken, expiresIn }))
+      const u = new UserModel({ accessToken, refreshToken, expiresIn })
+      userRef.current = u
     }
   }, [])
 
@@ -63,12 +64,18 @@ const App = () => {
   })
 
   const refreshAccessToken = async () => {
-    const refreshed = await tokenRefresh(user.refreshToken)
-    user.accessToken = refreshed.access_token
-    user.refreshToken = refreshed.refresh_token
-    setUser(user)
+    const refreshed = await tokenRefresh(userRef.current.refreshToken)
+    console.log("refreshed = ", refreshed)
+    userRef.current.accessToken = refreshed.access_token
+
+    if (refreshed.refresh_token) {
+      userRef.current.refreshToken = refreshed.refresh_token
+    }
+
     setTimeout(refreshAccessToken, fiftyMinutes)
   }
+
+  //console.log("user = ", userRef.current)
 
   const onSearch = search => {
     setFilteredAlbums(AlbumSearch(albums.current, search))
@@ -77,7 +84,7 @@ const App = () => {
   return (
     <div className="flex flex-col items-stretch min-h-screen">
       <Header
-        user={user.accessToken}
+        user={userRef.current.accessToken}
         onSpotifyLoginClick={onSpotifyLoginClick}
       />
 
@@ -86,7 +93,7 @@ const App = () => {
       <div className="flex-grow flex flex-row flex-wrap bg-gray-100 p-8 justify-center pb-48">
         {filteredAlbums.slice(0, albumCount).map((album, count) => (
           <Album
-            playDisabled={user.accessToken === null}
+            playDisabled={userRef.current.accessToken === null}
             key={count}
             album={album}
             onPlay={setPlayingAlbumURI}
@@ -95,7 +102,10 @@ const App = () => {
       </div>
 
       <div className="fixed w-full bottom-0 border-t border-gray-400">
-        <Player uri={playingAlbumURI} accessToken={user.accessToken} />
+        <Player
+          uri={playingAlbumURI}
+          accessToken={userRef.current.accessToken}
+        />
         <Footer />
       </div>
     </div>
