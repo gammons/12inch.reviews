@@ -59,9 +59,13 @@ const App = () => {
     }
   }, [])
 
-  useBottomScrollListener(() => {
-    setAlbumCount(albumCount + 10)
-  })
+  useBottomScrollListener(
+    () => {
+      setAlbumCount(albumCount + 10)
+    },
+    100,
+    100
+  )
 
   const refreshAccessToken = async () => {
     const refreshed = await tokenRefresh(userRef.current.refreshToken)
@@ -74,8 +78,6 @@ const App = () => {
 
     setTimeout(refreshAccessToken, fiftyMinutes)
   }
-
-  //console.log("user = ", userRef.current)
 
   const onSearch = search => {
     setFilteredAlbums(AlbumSearch(albums.current, search))
