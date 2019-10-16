@@ -8,8 +8,6 @@ import NextTrackButton from "./player/nextTrackButton"
 import PrevTrackButton from "./player/prevTrackButton"
 import ArtistAndTrack from "./player/artistAndTrack"
 
-let timer
-
 type Props = {
   accessToken: string,
   uri: string | null
@@ -19,6 +17,7 @@ const Player = (props: Props) => {
   const [isReady, setIsReady] = useState(false)
   const [isPlaying, setIsPlaying] = useState(false)
   const [spotifyPlayer, setSpotifyPlayer] = useState(null)
+  const timer = useRef(null)
 
   const [position, setPosition] = useState(0)
   const positionRef = useRef(position)
@@ -54,8 +53,13 @@ const Player = (props: Props) => {
       setAlbumImageURL(state.track_window.current_track.album.images[2].url)
       setPosition(state.position)
 
+      setIsPlaying(!state.paused)
+
       if (state.paused) {
-        setIsPlaying(false)
+        clearTimeout(timer.current)
+        timer.current = null
+      } else if (!timer.current) {
+        progressTick()
       }
     })
 
@@ -77,9 +81,10 @@ const Player = (props: Props) => {
 
   React.useEffect(() => {
     if (!isPlaying) {
-      clearTimeout(timer)
+      clearTimeout(timer.current)
+      timer.current = null
     }
-  }, [timer])
+  }, [timer.current])
 
   React.useEffect(() => {
     if (uri && isReady) {
@@ -88,7 +93,7 @@ const Player = (props: Props) => {
   }, [uri])
 
   const onStartPlay = () => {
-    clearTimeout(timer)
+    clearTimeout(timer.current)
     spotifyPlayer.play(uri, 0, 0).then(() => {
       progressTick()
       setIsPlaying(true)
@@ -104,7 +109,8 @@ const Player = (props: Props) => {
     } else {
       spotifyPlayer.pause().then(() => {
         setIsPlaying(!isPlaying)
-        clearTimeout(timer)
+        clearTimeout(timer.current)
+        timer.current = null
       })
     }
   }
@@ -129,7 +135,7 @@ const Player = (props: Props) => {
 
   const progressTick = () => {
     setPosition(positionRef.current + 1000)
-    timer = setTimeout(progressTick, 1000)
+    timer.current = setTimeout(progressTick, 1000)
   }
 
   const progressClick = percentage => {
