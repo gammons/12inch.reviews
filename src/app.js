@@ -38,7 +38,7 @@ const App = () => {
   const [accessToken, setAccessToken] = useState(null)
   const [albumCount, setAlbumCount] = useState(25)
 
-  const accessTokenRef = useRef(null)
+  const accessTokenRef = useRef(accessToken)
   const refreshToken = useRef(null)
 
   useEffect(() => {
@@ -98,6 +98,10 @@ const App = () => {
     setTimeout(refreshAccessToken, fiftyMinutes)
   }
 
+  const accessTokenFn = cb => {
+    cb(accessTokenRef.current)
+  }
+
   const onSearch = search => {
     setFilteredAlbums(AlbumSearch(albums.current, search))
   }
@@ -118,7 +122,7 @@ const App = () => {
       </div>
 
       <div className="fixed w-full bottom-0 border-t border-gray-400">
-        <Player uri={playingAlbumURI} accessToken={accessTokenRef.current} />
+        <Player uri={playingAlbumURI} accessTokenFn={accessTokenFn} />
         <Footer />
       </div>
     </div>

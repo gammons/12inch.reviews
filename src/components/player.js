@@ -9,7 +9,6 @@ import PrevTrackButton from "./player/prevTrackButton"
 import ArtistAndTrack from "./player/artistAndTrack"
 
 type Props = {
-  accessToken: string,
   uri: string | null
 }
 
@@ -36,10 +35,9 @@ const Player = (props: Props) => {
   const setupPlayer = () => {
     const aPlayer = new window.Spotify.Player({
       name: "12inch.reviews Player",
-      getOauthToken: cb => {
-        cb(props.accessToken)
-      }
+      getOauthToken: props.accessTokenFn
     })
+
     aPlayer.addListener("initialization_error", console.error)
     aPlayer.addListener("authentication_error", console.error)
     aPlayer.addListener("account_error", console.error)
@@ -64,20 +62,23 @@ const Player = (props: Props) => {
     })
 
     aPlayer.addListener("ready", ret => {
-      setSpotifyPlayer(new SpotifyPlayer(ret.device_id, props.accessToken))
+      setSpotifyPlayer(new SpotifyPlayer(ret.device_id, props.accessTokenFn))
     })
 
     aPlayer.connect()
   }
 
   React.useEffect(() => {
-    if (window.Spotify) {
-      if (!isReady && props.accessToken) {
+    const readyLoop = () => {
+      if (window.Spotify) {
         setupPlayer()
+        setIsReady(true)
+      } else {
+        setTimeout(readyLoop, 1000)
       }
-      setIsReady(true)
     }
-  })
+    readyLoop()
+  }, [])
 
   React.useEffect(() => {
     if (!isPlaying) {
