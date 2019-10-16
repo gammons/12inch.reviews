@@ -1,6 +1,7 @@
 // @flow
 import React, { useState, useEffect, useRef } from "react"
 import { useBottomScrollListener } from "react-bottom-scroll-listener"
+import ReactGA from "react-ga"
 
 import Album from "./components/album"
 import AlbumModel from "./models/album"
@@ -39,6 +40,11 @@ const App = () => {
 
   const accessTokenRef = useRef(null)
   const refreshToken = useRef(null)
+
+  useEffect(() => {
+    ReactGA.initialize("UA-73229-13")
+    ReactGA.pageview(window.location.pathname + window.location.search)
+  }, [])
 
   useEffect(() => {
     fetch("albums.json")
