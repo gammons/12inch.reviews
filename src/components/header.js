@@ -7,7 +7,7 @@ import SpotifyLoginButton from "./login/spotifyLoginButton"
 
 type Props = {
   onSpotifyLoginClick: () => void,
-  token?: string
+  isLoggedIn: boolean
 }
 
 const Header = (props: Props) => {
@@ -19,12 +19,15 @@ const Header = (props: Props) => {
           src="record.svg"
           style={{ width: 100, height: 100 }}
         />
-        <h1 className="text-4xl sm:text-5xl" style={{ fontFamily: "Rock Salt" }}>
+        <h1
+          className="text-4xl sm:text-5xl"
+          style={{ fontFamily: "Rock Salt" }}
+        >
           12inch.reviews
         </h1>
       </div>
       <div className="py-8 md:p-0 m-auto sm:m-0">
-        {!props.user && (
+        {!props.isLoggedIn && (
           <SpotifyLoginButton onClick={props.onSpotifyLoginClick} />
         )}
       </div>

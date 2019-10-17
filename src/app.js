@@ -5,7 +5,6 @@ import ReactGA from "react-ga"
 
 import Album from "./components/album"
 import AlbumModel from "./models/album"
-//import UserModel from "./models/user"
 
 import * as constants from "./constants"
 import Header from "./components/header"
@@ -14,10 +13,10 @@ import Player from "./components/player"
 import Footer from "./components/footer"
 
 import AlbumSearch from "./services/search"
-import tokenRefresh from "./services/tokenRefresher"
+import TokenManager from "./services/tokenManager"
+import getUrlParam from "./services/getUrlParam"
 
 const redirectUrl = `${window.location.href}.netlify/functions/spotifyLogin`
-const fiftyMinutes = 1000 * 60 * 50
 
 const onSpotifyLoginClick = () => {
   const args = []
@@ -35,11 +34,9 @@ const App = () => {
   const albums = useRef([])
   const [filteredAlbums, setFilteredAlbums] = useState([])
   const [playingAlbumURI, setPlayingAlbumURI] = useState(null)
-  const [accessToken, setAccessToken] = useState(null)
-  const [albumCount, setAlbumCount] = useState(25)
+  const [isLoggedIn, setIsLoggedIn] = useState(TokenManager.hasAccessToken())
 
-  const accessTokenRef = useRef(accessToken)
-  const refreshTokenRef = useRef(null)
+  const [albumCount, setAlbumCount] = useState(25)
 
   useEffect(() => {
     ReactGA.initialize("UA-73229-13")
@@ -60,12 +57,12 @@ const App = () => {
     const _accessToken = getUrlParam("accessToken")
     const _refreshToken = getUrlParam("refreshToken")
 
-    if (_accessToken) {
-      accessTokenRef.current = _accessToken
-      refreshTokenRef.current = _refreshToken
-      setAccessToken(_accessToken)
-      setTimeout(refreshAccessToken, fiftyMinutes)
-    }
+    if (!_accessToken) return
+
+    TokenManager.setAccessToken(_accessToken)
+    TokenManager.setRefreshToken(_refreshToken)
+
+    setIsLoggedIn(true)
   }, [])
 
   useBottomScrollListener(
@@ -77,29 +74,13 @@ const App = () => {
   )
 
   const onPlayAlbum = uri => {
-    if (accessTokenRef.current) {
+    if (isLoggedIn) {
       setPlayingAlbumURI(uri)
     } else {
       alert(
         "In order to listen, you'll need to grant access to Spotify.  Please log into Spotify using the green button above!"
       )
     }
-  }
-
-  const refreshAccessToken = async () => {
-    const refreshed = await tokenRefresh(refreshTokenRef.current)
-    accessTokenRef.current = refreshed.access_token
-    setAccessToken(accessTokenRef.current)
-
-    if (refreshed.refresh_token) {
-      refreshTokenRef.current = refreshed.refresh_token
-    }
-
-    setTimeout(refreshAccessToken, fiftyMinutes)
-  }
-
-  const accessTokenFn = cb => {
-    cb(accessTokenRef.current)
   }
 
   const onSearch = search => {
@@ -109,7 +90,7 @@ const App = () => {
   return (
     <div className="flex flex-col items-stretch min-h-screen">
       <Header
-        user={accessTokenRef.current}
+        isLoggedIn={isLoggedIn}
         onSpotifyLoginClick={onSpotifyLoginClick}
       />
 
@@ -122,20 +103,13 @@ const App = () => {
       </div>
 
       <div className="fixed w-full bottom-0 border-t border-gray-400">
-        <Player uri={playingAlbumURI} accessTokenFn={accessTokenFn} />
+        <Player
+          uri={playingAlbumURI}
+          accessTokenFn={TokenManager.accessTokenFn}
+        />
         <Footer />
       </div>
     </div>
-  )
-}
-
-const getUrlParam = name => {
-  return (
-    decodeURIComponent(
-      (new RegExp("[?|&]" + name + "=" + "([^&;]+?)(&|#|;|$)").exec(
-        window.location.search
-      ) || [null, ""])[1].replace(/\+/g, "%20")
-    ) || null
   )
 }
 
