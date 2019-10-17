@@ -49,8 +49,8 @@ const App = () => {
         .then(data => data.json())
         .then(data => {
           const al = data.map(a => new AlbumModel(a))
-          albums.current += al
-          setFilteredAlbums(al)
+          albums.current = albums.current.concat(al)
+          setFilteredAlbums(albums.current)
         })
     }
   }, [])
