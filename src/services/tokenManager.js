@@ -32,8 +32,6 @@ const TokenManager = {
       await TokenManager.refreshAccessToken()
     }
 
-    console.log("calling accessTokenFn with ", TokenManager.getAccessToken())
-
     if (TokenManager.getAccessToken()) cb(TokenManager.getAccessToken())
   },
 
@@ -45,7 +43,6 @@ const TokenManager = {
 
   refreshAccessToken: async () => {
     const refreshed = await TokenManager.tokenRefresh()
-    console.log("refreshAccessToken, refreshed = ", refreshed)
     TokenManager.setAccessToken(refreshed.access_token)
 
     if (refreshed.refresh_token) {
