@@ -39,7 +39,7 @@ const App = () => {
   const [albumCount, setAlbumCount] = useState(25)
 
   const accessTokenRef = useRef(accessToken)
-  const refreshToken = useRef(null)
+  const refreshTokenRef = useRef(null)
 
   useEffect(() => {
     ReactGA.initialize("UA-73229-13")
@@ -62,7 +62,7 @@ const App = () => {
 
     if (_accessToken) {
       accessTokenRef.current = _accessToken
-      refreshToken.current = _refreshToken
+      refreshTokenRef.current = _refreshToken
       setAccessToken(_accessToken)
       setTimeout(refreshAccessToken, fiftyMinutes)
     }
@@ -87,12 +87,12 @@ const App = () => {
   }
 
   const refreshAccessToken = async () => {
-    const refreshed = await tokenRefresh(refreshToken.current)
+    const refreshed = await tokenRefresh(refreshTokenRef.current)
     accessTokenRef.current = refreshed.access_token
     setAccessToken(accessTokenRef.current)
 
     if (refreshed.refresh_token) {
-      refreshToken.current = refreshed.refresh_token
+      refreshTokenRef.current = refreshed.refresh_token
     }
 
     setTimeout(refreshAccessToken, fiftyMinutes)
