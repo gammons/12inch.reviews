@@ -30,22 +30,29 @@ const Album = (props: Props) => {
 
   return (
     <div className="w-full max-w-2xl md:p-4">
-      <div className="border-r border-b border-l border-gray-400 lg:border-l-0 lg:border-t lg:border-grey-light bg-white rounded flex flex-row leading-normal">
+      <div className="border-r border-b border-l border-gray-400 lg:border-l-0 lg:border-t lg:border-grey-light bg-white md:rounded flex flex-row leading-normal">
         <div
-          className="absolute md:static h-24 w-24 md:h-64 md:w-64 flex-none bg-cover rounded-t lg:rounded-t-none md:rounded-l text-center overflow-hidden"
+          className="absolute md:static h-24 w-24 md:h-64 md:w-64 flex-none bg-cover rounded-t lg:rounded-t-none my-8 md:my-0 md:rounded-l text-center overflow-hidden"
           style={{ backgroundImage: `url(${album.image_url})` }}
         />
 
         <div className="flex flex-col justify-between">
           <div className="p-4 w-full flex flex-col">
             <div className="pl-24 md:pl-0">
-              <p className="text-black font-bold text-xl">{album.artist}</p>
-              <p className="text-gray-700 font-bold">{album.title}</p>
-              <p className="text-gray-600 text-xl flex flex-col sm:flex-row justify-between">
-                <span>
-                  Rating: <Rating rating={album.rating} />
+              <div className="text-black font-bold text-xl flex flex-col sm:flex-row justify-between">
+                <span>{album.artist}</span>
+                <span className="text-gray-500 text-sm">
+                  {album.prettyReviewDate()}
                 </span>
-                <span>{album.genre}</span>
+              </div>
+
+              <div className="text-gray-700 font-bold flex flex-col sm:flex-row justify-between">
+                <span className="text-gray-700 font-bold">{album.title}</span>
+                <span className="text-gray-700">{album.genre}</span>
+              </div>
+
+              <p className="text-gray-600 text-xl">
+                Rating: <Rating rating={album.rating} />{" "}
               </p>
             </div>
 

@@ -30,4 +30,12 @@ export default class Album {
     this.spotify_artist_id = args.spotify_artist_id
     this.image_url = args.image_url
   }
+
+  prettyReviewDate() {
+    return new Date(this.timestamp).toLocaleString("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric"
+    })
+  }
 }

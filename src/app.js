@@ -98,7 +98,7 @@ const App = () => {
 
       <SearchBar onSearch={onSearch} />
 
-      <div className="flex-grow flex flex-row flex-wrap bg-gray-100 p-8 justify-center pb-48">
+      <div className="flex-grow flex flex-row flex-wrap bg-gray-100 md:p-8 justify-center pb-48">
         {filteredAlbums.slice(0, albumCount).map((album, count) => (
           <Album key={count} album={album} onPlay={onPlayAlbum} />
         ))}
