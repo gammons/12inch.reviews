@@ -44,13 +44,15 @@ const App = () => {
   }, [])
 
   useEffect(() => {
-    fetch("albums.json")
-      .then(data => data.json())
-      .then(data => {
-        const al = data.albums.map(a => new AlbumModel(a))
-        albums.current = al
-        setFilteredAlbums(al)
-      })
+    for (let i = 0; i <= 17; i++) {
+      fetch(`albums${i}.json`)
+        .then(data => data.json())
+        .then(data => {
+          const al = data.map(a => new AlbumModel(a))
+          albums.current += al
+          setFilteredAlbums(al)
+        })
+    }
   }, [])
 
   useEffect(() => {
