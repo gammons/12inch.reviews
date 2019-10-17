@@ -19,7 +19,7 @@ const TokenManager = {
   },
 
   getRefreshToken: () => {
-    window.localStorage.getItem("refreshToken")
+    return window.localStorage.getItem("refreshToken")
   },
 
   setRefreshToken: token => {
