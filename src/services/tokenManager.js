@@ -2,9 +2,7 @@
 
 const TokenManager = {
   getAccessToken: () => {
-    const expiry = TokenManager.getTokenExpires()
-    if (expiry && Date.now() < expiry)
-      return window.localStorage.getItem("accessToken")
+    return window.localStorage.getItem("accessToken")
   },
 
   hasAccessToken: () => {
