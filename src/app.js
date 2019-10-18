@@ -44,7 +44,7 @@ const App = () => {
   }, [])
 
   useEffect(() => {
-    for (let i = 0; i <= 17; i++) {
+    for (let i = 0; i <= 15; i++) {
       fetch(`albums${i}.json`)
         .then(data => data.json())
         .then(data => {
