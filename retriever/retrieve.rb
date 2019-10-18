@@ -21,23 +21,50 @@ class Retriever
     @albums = []
   end
 
-  def access_token
-    puts @spotify.authorize
-  end
-
-  def test
-    Pitchfork.new.get_albums(900)
-    album = @spotify.search("Debby Friday", "Death Drive EP")
-    puts "album = '#{album && album["name"]}'"
-  end
-
-  def perform
+  def backfill
     load_albums
     fetch_albums
     post_process
     write_results
     log_rejections
     @logger.close
+  end
+
+  def refresh
+    get_new_albums
+    write_results
+    @logger.close
+  end
+
+  def get_new_albums
+    load_albums
+    last_id = @albums.sort_by {|a| a.timestamp }.reverse[0].id
+
+    found = false
+    count = 0
+    new_albums = []
+    while !found do
+      albums = Pitchfork.new.get_albums(count)
+      albums = albums.sort_by {|a| a.timestamp }.reverse
+
+      last = albums.find_index {|a| a.id == last_id }
+      found = true unless last.nil?
+      last ||= albums.count
+
+      puts "last is #{last}"
+      puts "found is #{found}"
+
+      new_albums += add_spotify_info_to_albums(albums[0..last - 1])
+
+      count += 1
+    end
+
+    @albums += new_albums
+  end
+
+  def create_albums_json
+    load_albums
+    write_results
   end
 
   private
@@ -48,6 +75,9 @@ class Retriever
     @albums = JSON.parse(File.read("temp_albums.json")).map do |album_h|
       Album.new(album_h)
     end
+    @albums.reject! {|album| album.spotify_album_id.nil? }
+
+    @albums
   end
 
   def fetch_albums
@@ -55,22 +85,10 @@ class Retriever
       new_albums = Pitchfork.new.get_albums(page)
 
       puts page
-      new_albums.each do |album|
-        spotify_album = @spotify.search(album.artist, album.title)
 
-        unless spotify_album.nil?
-          album.spotify_artist_id = spotify_album["artists"][0]["id"]
-          album.spotify_album_id = spotify_album["id"]
-          album.image_url = spotify_album["images"][0]["url"]
-        end
-
-        putc "."
-        sleep 1
-
-      end
+      @albums += add_spotify_info_to_albums(new_albums)
 
       puts "\n"
-      @albums += new_albums
 
       aof = File.open("temp_albums.json", "w")
       aof << JSON.generate(@albums.map(&:to_h))
@@ -79,15 +97,35 @@ class Retriever
     @albums
   end
 
+  def add_spotify_info_to_albums(albums)
+    albums.each do |album|
+      spotify_album = @spotify.search(album.artist, album.title)
+
+      unless spotify_album.nil?
+        album.spotify_artist_id = spotify_album["artists"][0]["id"]
+        album.spotify_album_id = spotify_album["id"]
+        album.image_url = spotify_album["images"][0]["url"]
+      end
+
+      putc "."
+      sleep 1
+    end
+
+    albums.reject! {|album| album.spotify_album_id.nil? }
+    albums
+  end
+
   def post_process
     @rejected = @albums.select {|a| a.spotify_artist_id.nil? || a.spotify_album_id.nil? }
     @albums.reject! {|a| a.spotify_artist_id.nil? || a.spotify_album_id.nil? }
   end
 
   def write_results
-    f = File.open("albums.json","w")
-    f << JSON.generate({albums: @albums.map(&:to_h)})
-    f.close
+    @albums.each_slice(1000).to_a.each_with_index do |albums_slice,idx|
+      f = File.open("albums#{idx}.json", "w")
+      f << JSON.generate(albums_slice.map(&:to_h))
+      f.close
+    end
   end
 
   def log_rejections
@@ -99,4 +137,4 @@ class Retriever
   end
 end
 
-Retriever.new.perform
+Retriever.new.refresh
