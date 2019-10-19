@@ -150,11 +150,11 @@ const Player = (props: Props) => {
   return (
     <div className="w-full bg-gray-200 border-t-1 border-gray-400 shadow flex flex-row pt-2 px-8 h-32">
       <div
-        className="absolute h-24 w-24 bg-cover rounded overflow-hidden bg-gray-500"
+        className="my-2 absolute h-24 w-24 bg-cover rounded overflow-hidden bg-gray-500"
         style={{ backgroundImage: `url(${albumImageURL})` }}
       />
 
-      <div className="flex flex-row flex-wrap w-full">
+      <div className="md:flex flex-row flex-wrap w-full">
         <div className="pl-32 relative md:absolute">
           <ArtistAndTrack
             artist={artist}

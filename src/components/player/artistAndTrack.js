@@ -8,15 +8,13 @@ type Props = {
 }
 
 const ArtistAndTrack = (props: Props) => {
-  const val =
-    props.artist && props.trackTitle
-      ? `${props.artist} - ${props.trackTitle}`
-      : ""
+  if (!props.artist && !props.trackTitle) return null
+
   return (
-    <div className="text-lg font-bold">
-      {val}
+    <div className="text-sm md:text-lg">
+      <span className="font-bold">{props.trackTitle}</span>
       <br />
-      <p className="inline font-bold text-gray-600">{props.album}</p>
+      <span>{props.artist}</span>
     </div>
   )
 }
