@@ -3,16 +3,25 @@ const AlbumSearch = (albums, search) => {
   let filtered = albums
 
   if (search.artist !== "") {
-    filtered = filtered.filter(a => {
-      return (
-        a.artist &&
-        a.artist
-          .split(" ")
-          .some(name =>
-            name.toLowerCase().startsWith(search.artist.toLowerCase())
-          )
-      )
-    })
+    if (search.artist.split(" ").length == 1) {
+      filtered = filtered.filter(a => {
+        return (
+          a.artist &&
+          a.artist
+            .split(" ")
+            .some(name =>
+              name.toLowerCase().startsWith(search.artist.toLowerCase())
+            )
+        )
+      })
+    } else {
+      filtered = filtered.filter(a => {
+        return (
+          a.artist &&
+          a.artist.toLowerCase().startsWith(search.artist.toLowerCase())
+        )
+      })
+    }
   }
 
   if (search.genre !== "") {
