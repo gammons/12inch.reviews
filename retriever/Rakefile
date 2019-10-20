@@ -13,4 +13,8 @@ task :refresh do
   puts `git commit -m "Album update"`
 end
 
+task :test do
+  puts "testing!"
+end
+
 task default: :refresh
