@@ -1,0 +1,16 @@
+require_relative "retrieve"
+
+desc "Backfill all the albums"
+task :backfill do
+  Retriever.new.backfill
+end
+
+desc "Refresh for new albums"
+task :refresh do
+  #Retriever.new.refresh
+  puts `mv albums*.json ../public`
+  puts `git add ../public/albums*.json`
+  puts `git commit -m "Album update"`
+end
+
+task default: :refresh

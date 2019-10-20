@@ -54,12 +54,18 @@ class Retriever
       puts "last is #{last}"
       puts "found is #{found}"
 
+      next if found && last == 0
+
       new_albums += add_spotify_info_to_albums(albums[0..last - 1])
 
       count += 1
     end
 
     @albums += new_albums
+
+    aof = File.open("temp_albums.json", "w")
+    aof << JSON.generate(@albums.map(&:to_h))
+    aof.close
   end
 
   def create_albums_json
@@ -136,5 +142,3 @@ class Retriever
     end
   end
 end
-
-Retriever.new.refresh
