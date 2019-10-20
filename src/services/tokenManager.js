@@ -10,6 +10,7 @@ const TokenManager = {
   },
 
   setAccessToken: token => {
+    console.log("setAccessToken with ", token)
     window.localStorage.setItem("accessToken", token)
 
     const expiry = Date.now() + 1000 * 60 * 60
@@ -27,6 +28,8 @@ const TokenManager = {
   accessTokenFn: async cb => {
     const expires = TokenManager.getTokenExpires()
     if (expires && expires < Date.now()) {
+      console.log("Existing expired token:", TokenManager.getAccessToken())
+      console.log("Refreshing...")
       await TokenManager.refreshAccessToken()
     }
 

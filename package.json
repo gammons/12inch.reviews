@@ -58,6 +58,7 @@
     "flow": "^0.2.3",
     "flow-bin": "^0.109.0",
     "prettier": "^1.18.2",
+    "react-devtools": "^4.2.0",
     "tailwindcss": "^1.1.2"
   }
 }
