@@ -7,11 +7,17 @@ end
 
 desc "Refresh for new albums"
 task :refresh do
-  #Retriever.new.refresh
+  Retriever.new.refresh
   puts `mv albums*.json ../public`
   puts `git add ../public/albums*.json`
   puts `git commit -m "Album update"`
 end
+
+task :docker_build do
+  `docker build -t gammons1/12inch.reviews:latest .`
+  `docker push gammons1/12inch.reviews:latest`
+end
+
 
 task :test do
   puts "testing!"
