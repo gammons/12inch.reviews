@@ -29,11 +29,11 @@ The access token only has a shelf life of 1 hour, so refreshing occurs automatic
 [reviews]: https://12inch.reviews
 [search]: https://developer.spotify.com/documentation/web-api/reference/search/search/
 
-## running locally
+## Running locally
 
 1. In order for the player to work, You'll need a `.env` file that includes `SPOTIFY_CLIENT_ID` and `SPOTIFY_CLIENT_SECRET`.
 2. `yarn && yarn start`
 
 ## License
 
-This project is licensed under the GNU General public license.  See (LICENSE.txt)[https://github.com/gammons/12inch.reviews/blob/master/LICENSE.txt] for more info.
+This project is licensed under the GNU General public license.  See [LICENSE.txt](https://github.com/gammons/12inch.reviews/blob/master/LICENSE.txt) for more info.
