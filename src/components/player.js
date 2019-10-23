@@ -49,6 +49,7 @@ const Player = (props: Props) => {
       setTrackTitle(state.track_window.current_track.name)
       setTrackDuration(state.track_window.current_track.duration_ms)
       setAlbumImageURL(state.track_window.current_track.album.images[2].url)
+      setTrackNum(state.track_window.previous_tracks.length)
       setPosition(state.position)
 
       setIsPlaying(!state.paused)
@@ -98,6 +99,8 @@ const Player = (props: Props) => {
     spotifyPlayer.play(uri, 0, 0).then(() => {
       progressTick()
       setIsPlaying(true)
+      setTrackNum(0)
+      setPosition(0)
     })
   }
 
