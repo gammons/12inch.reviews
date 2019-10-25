@@ -21,6 +21,8 @@ end
 
 task :test do
   puts "testing!"
+  puts "SPOTIFY_CLIENT_ID = '#{ENV['SPOTIFY_CLIENT_ID']}'"
+  puts "SPOTIFY_CLIENT_SECRET = '#{ENV['SPOTIFY_CLIENT_SECRET']}'"
 end
 
 task default: :refresh
