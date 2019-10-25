@@ -17,18 +17,19 @@ end
 
 task :create_albums_json_files do
   Retriever.new.create_albums_json_files
-  client = Aws::S3::Client.new(region: "us-east-2", credentials: AWS_CREDS)
-  client.put_bucket_acl({
-      acl: "public-read",
-      bucket: "12inch.reviews"
-  })
 
+  client = Aws::S3::Client.new(region: "us-east-2", credentials: AWS_CREDS)
+
+  total_files = Dir.glob("albums*.json").length
+  body = JSON.generate({files: total_files})
+  client.put_object({bucket: "12inch.reviews", key: "metadata.json", acl: "public-read", body: body})
 
   Dir.glob("albums*.json").each do |filename|
     File.open(filename, "rb") do |file|
-      client.put_object({bucket: "12inch.reviews", key: "albums1.json", acl: "public-read", body: file})
+      client.put_object({bucket: "12inch.reviews", key: filename, acl: "public-read", body: file})
     end
   end
+
   `rm -rf albums*.json`
 end
 
