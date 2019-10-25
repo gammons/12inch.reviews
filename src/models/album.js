@@ -2,7 +2,8 @@
 
 export default class Album {
   id: string
-  timestamp: number
+  timestamp: string
+  created_at: string
   title: string
   artist: string
   rating: string
@@ -16,7 +17,8 @@ export default class Album {
 
   constructor(args) {
     this.id = args.id
-    this.timestamp = args.timestamp
+    this.timestamp = Date.parse(args.created_at)
+    this.created_at = args.created_at
     this.title = args.title
     this.artist = args.artist
     this.rating = args.rating
