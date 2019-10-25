@@ -1,4 +1,5 @@
 require_relative "retrieve"
+require_relative "lib/db_setup"
 
 desc "Backfill all the albums"
 task :backfill do
@@ -8,16 +9,20 @@ end
 desc "Refresh for new albums"
 task :refresh do
   Retriever.new.refresh
-  puts `mv albums*.json ../public`
-  puts `git add ../public/albums*.json`
-  puts `git commit -m "Album update"`
+end
+
+task :create_albums_json_files do
+  Retriever.new.create_albums_json_files
+end
+
+task :setup_db do
+  DBSetup.new.create!
 end
 
 task :docker_build do
   `docker build -t gammons1/12inch.reviews:latest .`
   `docker push gammons1/12inch.reviews:latest`
 end
-
 
 task :test do
   puts "testing!"

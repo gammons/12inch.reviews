@@ -14,11 +14,18 @@ class Spotify
 
     req = HTTP.headers("Authorization": "Bearer #{@access_token}").get("https://api.spotify.com/v1/search", params: {q: "artist:#{artist_name.downcase} album:#{album_name.downcase}", type: "album"})
     resp = JSON.parse(req.body.to_s)
+
+    unless req.code.to_s.start_with?("2")
+      raise RuntimeError, req.body
+    end
     return resp["albums"] && resp["albums"]["items"] && resp["albums"]["items"][0]
   end
 
   def get_artist_id(artist_name)
     req = HTTP.headers("Authorization": "Bearer #{@access_token}").get("https://api.spotify.com/v1/search", params: {q: artist_name, type: "artist"})
+    unless req.code.to_s.start_with?("2")
+      raise RuntimeError, req.body
+    end
     @logger.debug("body is #{req.body}")
     resp = JSON.parse(req.body.to_s)
 
@@ -42,6 +49,9 @@ class Spotify
 
     url = "https://api.spotify.com/v1/artists/#{artist_id}/albums?offset=0&limit=50"
     req = HTTP.headers("Authorization": "Bearer #{@access_token}").get(url)
+    unless req.code.to_s.start_with?("2")
+      raise RuntimeError, req.body
+    end
     @logger.debug("body is #{req.body}")
     resp = JSON.parse(req.body.to_s)
     spotify_album_name = FuzzyMatch.new(resp["items"].map {|r| r["name"] }, must_match_at_least_one_word: true).find(album_name)
@@ -57,6 +67,9 @@ class Spotify
   def authorize
     encoded = Base64.encode64("#{ENV["SPOTIFY_CLIENT_ID"]}:#{ENV["SPOTIFY_CLIENT_SECRET"]}").gsub(/\n/,"")
     resp = HTTP.headers("Authorization": "Basic #{encoded}").post("https://accounts.spotify.com/api/token", form: {grant_type: "client_credentials"})
+    unless resp.code.to_s.start_with?("2")
+      raise RuntimeError, resp.body
+    end
     json = JSON.parse(resp.body.to_s)
     json["access_token"]
   end

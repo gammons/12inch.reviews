@@ -1,9 +1,21 @@
 GEM
   remote: https://rubygems.org/
   specs:
+    activemodel (6.0.0)
+      activesupport (= 6.0.0)
+    activerecord (6.0.0)
+      activemodel (= 6.0.0)
+      activesupport (= 6.0.0)
+    activesupport (6.0.0)
+      concurrent-ruby (~> 1.0, >= 1.0.2)
+      i18n (>= 0.7, < 2)
+      minitest (~> 5.1)
+      tzinfo (~> 1.1)
+      zeitwerk (~> 2.1, >= 2.1.8)
     addressable (2.7.0)
       public_suffix (>= 2.0.2, < 5.0)
     byebug (11.0.1)
+    concurrent-ruby (1.1.5)
     domain_name (0.5.20190701)
       unf (>= 0.0.5, < 1.0.0)
     dotenv (2.7.5)
@@ -17,19 +29,29 @@ GEM
       domain_name (~> 0.5)
     http-form_data (2.1.1)
     http_parser.rb (0.6.0)
+    i18n (1.7.0)
+      concurrent-ruby (~> 1.0)
+    minitest (5.12.2)
     public_suffix (4.0.1)
+    sqlite3 (1.4.1)
+    thread_safe (0.3.6)
+    tzinfo (1.2.5)
+      thread_safe (~> 0.1)
     unf (0.1.4)
       unf_ext
     unf_ext (0.0.7.6)
+    zeitwerk (2.2.0)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
+  activerecord
   byebug
   dotenv
   fuzzy_match
   http
+  sqlite3
 
 BUNDLED WITH
    1.17.2

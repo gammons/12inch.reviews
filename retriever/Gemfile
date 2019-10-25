@@ -5,6 +5,8 @@ source "https://rubygems.org"
 git_source(:github) {|repo_name| "https://github.com/#{repo_name}" }
 
 gem "http"
+gem "sqlite3"
+gem "activerecord"
 gem "byebug"
 gem "dotenv"
 gem "fuzzy_match"
