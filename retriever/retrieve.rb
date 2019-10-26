@@ -54,7 +54,7 @@ class Retriever
     Album.order(created_at: :desc).each_slice(1000).to_a.each_with_index do |albums_slice,idx|
       putc "."
       f = File.open("albums#{idx}.json", "w")
-      f << JSON.generate(albums_slice.map(&:attributes))
+      f << JSON.generate(albums_slice.map(&:to_h))
       f.close
     end
   end
