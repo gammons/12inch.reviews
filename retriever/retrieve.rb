@@ -38,7 +38,6 @@ class Retriever
     @logger.close
   end
 
-
   def refresh
     dupe_count = 0
     (0..30).each do |page|
@@ -52,7 +51,8 @@ class Retriever
   end
 
   def create_albums_json_files
-    Album.order(:created_at).each_slice(1000).to_a.each_with_index do |albums_slice,idx|
+    Album.order(created_at: :desc).each_slice(1000).to_a.each_with_index do |albums_slice,idx|
+      putc "."
       f = File.open("albums#{idx}.json", "w")
       f << JSON.generate(albums_slice.map(&:attributes))
       f.close
