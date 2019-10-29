@@ -5,6 +5,7 @@ import ReactGA from "react-ga"
 
 import Album from "./components/album"
 import AlbumModel from "./models/album"
+import AlbumStore from "./services/albumStore"
 
 import * as constants from "./constants"
 import Header from "./components/header"
@@ -34,9 +35,10 @@ const App = () => {
   const albums = useRef([])
   const [filteredAlbums, setFilteredAlbums] = useState([])
   const [playingAlbumURI, setPlayingAlbumURI] = useState(null)
+  const albumStoreRef = useRef(null)
   const [isLoggedIn, setIsLoggedIn] = useState(TokenManager.hasAccessToken())
 
-  const [albumCount, setAlbumCount] = useState(25)
+  // const [albumCount, setAlbumCount] = useState(25)
 
   useEffect(() => {
     ReactGA.initialize("UA-73229-13")
@@ -47,18 +49,24 @@ const App = () => {
     fetch("https://s3.us-east-2.amazonaws.com/12inch.reviews/metadata.json")
       .then(resp => resp.json())
       .then(metadata => {
-        for (let i = 0; i < metadata.files; i++) {
-          fetch(
-            `https://s3.us-east-2.amazonaws.com/12inch.reviews/albums${i}.json`
-          )
-            .then(data => data.json())
-            .then(data => {
-              const al = data.map(a => new AlbumModel(a))
-              albums.current = albums.current.concat(al)
-              setFilteredAlbums(albums.current)
-            })
-        }
+        albumStoreRef.current = new AlbumStore(metadata)
+        albumStoreRef.current.initialize().then(() => {
+          console.log("initialize resolved")
+        })
       })
+
+    //     for (let i = 0; i < metadata.files; i++) {
+    //       fetch(
+    //         `https://s3.us-east-2.amazonaws.com/12inch.reviews/albums${i}.json`
+    //       )
+    //         .then(data => data.json())
+    //         .then(data => {
+    //           const al = data.map(a => new AlbumModel(a))
+    //           albums.current = albums.current.concat(al)
+    //           setFilteredAlbums(albums.current)
+    //         })
+    //     }
+    //   })
   }, [])
 
   useEffect(() => {
@@ -75,7 +83,7 @@ const App = () => {
 
   useBottomScrollListener(
     () => {
-      setAlbumCount(albumCount + 25)
+      //setAlbumCount(albumCount + 25)
     },
     100,
     100
@@ -96,28 +104,30 @@ const App = () => {
   }
 
   return (
-    <div className="flex flex-col items-stretch min-h-screen">
-      <Header
-        isLoggedIn={isLoggedIn}
-        onSpotifyLoginClick={onSpotifyLoginClick}
-      />
-
-      <SearchBar onSearch={onSearch} />
-
-      <div className="flex-grow flex flex-row flex-wrap bg-gray-100 md:p-8 justify-center pb-48">
-        {filteredAlbums.slice(0, albumCount).map((album, count) => (
-          <Album key={count} album={album} onPlay={onPlayAlbum} />
-        ))}
-      </div>
-
-      <div className="fixed w-full bottom-0 border-t border-gray-400">
-        <Player
-          uri={playingAlbumURI}
-          accessTokenFn={TokenManager.accessTokenFn}
+    <React.StrictMode>
+      <div className="flex flex-col items-stretch min-h-screen">
+        <Header
+          isLoggedIn={isLoggedIn}
+          onSpotifyLoginClick={onSpotifyLoginClick}
         />
-        <Footer />
+
+        <SearchBar onSearch={onSearch} />
+
+        <div className="flex-grow flex flex-row flex-wrap bg-gray-100 md:p-8 justify-center pb-48">
+          {filteredAlbums.slice(0, 5).map((album, count) => (
+            <Album key={count} album={album} onPlay={onPlayAlbum} />
+          ))}
+        </div>
+
+        <div className="fixed w-full bottom-0 border-t border-gray-400">
+          <Player
+            uri={playingAlbumURI}
+            accessTokenFn={TokenManager.accessTokenFn}
+          />
+          <Footer />
+        </div>
       </div>
-    </div>
+    </React.StrictMode>
   )
 }
 
