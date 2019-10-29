@@ -32,8 +32,8 @@ const onSpotifyLoginClick = () => {
 }
 
 const App = () => {
-  const albums = useRef([])
-  const [filteredAlbums, setFilteredAlbums] = useState([])
+  const albumsRef = useRef([])
+  const [albums, setAlbums] = useState([])
   const [playingAlbumURI, setPlayingAlbumURI] = useState(null)
   const albumStoreRef = useRef(null)
   const [isLoggedIn, setIsLoggedIn] = useState(TokenManager.hasAccessToken())
@@ -52,6 +52,11 @@ const App = () => {
         albumStoreRef.current = new AlbumStore(metadata)
         albumStoreRef.current.initialize().then(() => {
           console.log("initialize resolved")
+          albumStoreRef.current.getAlbums().then(_albums => {
+            console.log("getAlbums", _albums)
+            setAlbums(_albums)
+            //albumsRef.current = _albums
+          })
         })
       })
 
@@ -100,7 +105,7 @@ const App = () => {
   }
 
   const onSearch = search => {
-    setFilteredAlbums(AlbumSearch(albums.current, search))
+    //setFilteredAlbums(AlbumSearch(albums.current, search))
   }
 
   return (
@@ -114,7 +119,7 @@ const App = () => {
         <SearchBar onSearch={onSearch} />
 
         <div className="flex-grow flex flex-row flex-wrap bg-gray-100 md:p-8 justify-center pb-48">
-          {filteredAlbums.slice(0, 5).map((album, count) => (
+          {albums.slice(0, 5).map((album, count) => (
             <Album key={count} album={album} onPlay={onPlayAlbum} />
           ))}
         </div>

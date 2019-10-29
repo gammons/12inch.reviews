@@ -1,5 +1,6 @@
 // @flow
 import AlbumFetcher from "./albumFetcher"
+import AlbumModel from "../models/album"
 
 export default class AlbumStore {
   constructor(metadata) {
@@ -42,15 +43,23 @@ export default class AlbumStore {
   }
 
   getAlbums() {
-    console.log("getAlbums")
-    const store = this.db
-      .transaction(["albums"], "readonly")
-      .objectStore("albums")
-    store.index("timestamp").openCursor().onsuccess = event => {
-      console.log("event = ", event)
-      const cursor = event.target.result
-      this.readyFn(cursor)
-    }
+    return new Promise(resolve => {
+      const store = this.db
+        .transaction(["albums"], "readonly")
+        .objectStore("albums")
+
+      const albums = []
+      store.index("timestamp").openCursor(null, "prev").onsuccess = event => {
+        this.cursor = event.target.result
+        if (!this.cursor) {
+          resolve(albums)
+          return
+        }
+
+        albums.push(new AlbumModel(this.cursor.value))
+        this.cursor.continue()
+      }
+    })
   }
 
   fetchMore() {}
