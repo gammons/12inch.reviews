@@ -46,26 +46,11 @@ const App = () => {
 
   useEffect(() => {
     const albumStore = new AlbumStore()
-    albumStore.initialize().then(() => {
-      albums.current = albumStore.retrieve()
-      console.log("albums.current = ", albumStore.retrieve())
-      setFilteredAlbums([])
+    albumStore.initialize().then(async () => {
+      const _albums = await albumStore.retrieve()
+      albums.current = _albums
+      setFilteredAlbums(albums.current)
     })
-    // fetch("https://s3.us-east-2.amazonaws.com/12inch.reviews/metadata.json")
-    //   .then(resp => resp.json())
-    //   .then(metadata => {
-    //     for (let i = 0; i < metadata.files; i++) {
-    //       fetch(
-    //         `https://s3.us-east-2.amazonaws.com/12inch.reviews/albums${i}.json`
-    //       )
-    //         .then(data => data.json())
-    //         .then(data => {
-    //           const al = data.map(a => new AlbumModel(a))
-    //           albums.current = albums.current.concat(al)
-    //           setFilteredAlbums(albums.current)
-    //         })
-    //     }
-    //   })
   }, [])
 
   useEffect(() => {

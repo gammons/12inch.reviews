@@ -1,6 +1,7 @@
 // @flow
 import AlbumFetcher from "./albumFetcher"
 import AlbumModel from "../models/album"
+import IndexStore from "./indexStore"
 
 export default class AlbumStore {
   fetcher: AlbumFetcher
@@ -11,10 +12,17 @@ export default class AlbumStore {
 
   async initialize() {
     this.fetcher = new AlbumFetcher()
-    this.albums = JSON.parse(window.localStorage.getItem("albums")) || []
+    this.indexStore = new IndexStore()
+    await this.indexStore.initialize()
+    this.albums = await this.indexStore.fetch()
     const data = await this.fetcher.fetch(0)
     this.albumCount = data.album_count
     this.latestAlbums = data.albums
+
+    if (this.albumCount === this.albums.length) {
+      return Promise.resolve()
+    }
+
     return this.reconcile()
   }
 
@@ -43,17 +51,10 @@ export default class AlbumStore {
 
   // save al
   saveToLocal() {
-    console.log("saveToLocal this.albums = ", this.albums)
-    window.localStorage.setItem("albums", JSON.stringify(this.albums))
+    this.indexStore.save(this.albums)
   }
 
   retrieve() {
-    console.log("albumStore.retrieve")
-    const albums = JSON.parse(window.localStorage.getItem("albums"))
-    console.log("albums = ", albums.length)
-    return albums.map(album => {
-      //console.log("album = ", album)
-      return new AlbumModel(album)
-    })
+    return this.indexStore.fetch()
   }
 }
