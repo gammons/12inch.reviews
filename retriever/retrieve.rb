@@ -51,10 +51,14 @@ class Retriever
   end
 
   def create_albums_json_files
+    timestamp = Time.now.to_i
+    album_count = Album.count
+    file_count = album_count / 1000
     Album.order(created_at: :desc).each_slice(1000).to_a.each_with_index do |albums_slice,idx|
       putc "."
       f = File.open("albums#{idx}.json", "w")
-      f << JSON.generate(albums_slice.map(&:to_h))
+
+      f << JSON.generate({albums: albums_slice.map(&:to_h), timestamp: timestamp, album_count: album_count})
       f.close
     end
   end

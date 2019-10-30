@@ -15,14 +15,15 @@ task :refresh do
   Retriever.new.refresh
 end
 
+desc "Create albums json files, and upload them"
 task :create_albums_json_files do
   Retriever.new.create_albums_json_files
 
   client = Aws::S3::Client.new(region: "us-east-2", credentials: AWS_CREDS)
 
-  total_files = Dir.glob("albums*.json").length
-  body = JSON.generate({files: total_files, timestamp: Time.now.to_i})
-  client.put_object({bucket: "12inch.reviews", key: "metadata.json", acl: "public-read", body: body})
+  # total_files = Dir.glob("albums*.json").length
+  # body = JSON.generate({files: total_files, timestamp: Time.now.to_i})
+  # client.put_object({bucket: "12inch.reviews", key: "metadata.json", acl: "public-read", body: body})
 
   Dir.glob("albums*.json").each do |filename|
     File.open(filename, "rb") do |file|

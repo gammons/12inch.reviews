@@ -1,5 +1,7 @@
 // @flow
-const AlbumSearch = (albums, search) => {
+import SearchModel from "../models/search"
+
+const AlbumSearch = (albums, search: SearchModel) => {
   let filtered = albums
 
   if (search.artist !== "") {

@@ -13,6 +13,7 @@ import Player from "./components/player"
 import Footer from "./components/footer"
 
 import AlbumSearch from "./services/search"
+import AlbumStore from "./services/albumStore"
 import TokenManager from "./services/tokenManager"
 import getUrlParam from "./services/getUrlParam"
 
@@ -44,21 +45,27 @@ const App = () => {
   }, [])
 
   useEffect(() => {
-    fetch("https://s3.us-east-2.amazonaws.com/12inch.reviews/metadata.json")
-      .then(resp => resp.json())
-      .then(metadata => {
-        for (let i = 0; i < metadata.files; i++) {
-          fetch(
-            `https://s3.us-east-2.amazonaws.com/12inch.reviews/albums${i}.json`
-          )
-            .then(data => data.json())
-            .then(data => {
-              const al = data.map(a => new AlbumModel(a))
-              albums.current = albums.current.concat(al)
-              setFilteredAlbums(albums.current)
-            })
-        }
-      })
+    const albumStore = new AlbumStore()
+    albumStore.initialize().then(() => {
+      albums.current = albumStore.retrieve()
+      console.log("albums.current = ", albumStore.retrieve())
+      setFilteredAlbums([])
+    })
+    // fetch("https://s3.us-east-2.amazonaws.com/12inch.reviews/metadata.json")
+    //   .then(resp => resp.json())
+    //   .then(metadata => {
+    //     for (let i = 0; i < metadata.files; i++) {
+    //       fetch(
+    //         `https://s3.us-east-2.amazonaws.com/12inch.reviews/albums${i}.json`
+    //       )
+    //         .then(data => data.json())
+    //         .then(data => {
+    //           const al = data.map(a => new AlbumModel(a))
+    //           albums.current = albums.current.concat(al)
+    //           setFilteredAlbums(albums.current)
+    //         })
+    //     }
+    //   })
   }, [])
 
   useEffect(() => {
