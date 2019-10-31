@@ -1,5 +1,5 @@
 // @flow
-import React from "react"
+import React, { useState } from "react"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faPlay, faBookOpen } from "@fortawesome/free-solid-svg-icons"
 
@@ -22,19 +22,38 @@ type Props = {
 
 const Album = (props: Props) => {
   const album = props.album
+  const [showPlay, setShowPlay] = useState(false)
 
   const onPlayAlbum = () => {
     props.onPlay(album.spotify_album_id)
     return false
   }
 
+  const showPlayButton = () => {
+    setShowPlay(true)
+  }
+
+  const hidePlayButton = () => {
+    setShowPlay(false)
+  }
+
   return (
     <div className="w-full max-w-2xl md:p-4">
       <div className="border-r border-b border-l border-gray-400 lg:border-l-0 lg:border-t lg:border-grey-light bg-white md:rounded flex flex-row leading-normal">
         <div
-          className="absolute md:static h-24 w-24 md:h-64 md:w-64 flex-none bg-cover rounded-t lg:rounded-t-none my-8 md:my-0 md:rounded-l text-center overflow-hidden"
+          onMouseOver={showPlayButton}
+          onMouseOut={hidePlayButton}
+          className="absolute md:static h-24 w-24 md:h-64 md:w-64 flex-none bg-cover rounded-t lg:rounded-t-none my-8 md:my-0 md:rounded-l text-center overflow-hidden flex items-center justify-center"
           style={{ backgroundImage: `url(${album.image_url})` }}
-        />
+        >
+          <a
+            onClick={onPlayAlbum}
+            className={`cursor-pointer text-4xl z-10 bg-white rounded px-4 py-1 ${!showPlay &&
+              "hidden"}`}
+          >
+            <FontAwesomeIcon icon={faPlay} />
+          </a>
+        </div>
 
         <div className="flex flex-col justify-between">
           <div className="p-4 w-full flex flex-col">
