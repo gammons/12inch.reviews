@@ -4,7 +4,6 @@ import { useBottomScrollListener } from "react-bottom-scroll-listener"
 import ReactGA from "react-ga"
 
 import Album from "./components/album"
-import AlbumModel from "./models/album"
 
 import * as constants from "./constants"
 import Header from "./components/header"
@@ -47,7 +46,7 @@ const App = () => {
   useEffect(() => {
     const albumStore = new AlbumStore()
 
-    albumStore.initialize().then(async initialAlbums => {
+    albumStore.initialize().then(initialAlbums => {
       albums.current = initialAlbums
       setFilteredAlbums(albums.current)
       albumStore.reconcile().then(async () => {
