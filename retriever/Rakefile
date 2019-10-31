@@ -31,6 +31,10 @@ task :create_albums_json_files do
   `rm -rf albums*.json initial.json`
 end
 
+task :ensure_unique_timestamps do
+  Retriever.new.ensure_unique_timestamps
+end
+
 task :setup_db do
   DBSetup.new.create!
 end

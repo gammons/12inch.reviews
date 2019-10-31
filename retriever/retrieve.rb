@@ -40,6 +40,7 @@ class Retriever
 
   def refresh
     dupe_count = 0
+    last_id = Album.maximum(:id)
     (0..30).each do |page|
       puts "============ Page #{page} ==========="
       Pitchfork.new.get_albums(page, "desc").each do |album|
@@ -48,6 +49,7 @@ class Retriever
         return if dupe_count > 3
       end
     end
+    ensure_unique_timestamps(last_id)
   end
 
   def create_albums_json_files
@@ -66,6 +68,18 @@ class Retriever
 
       f << JSON.generate({albums: albums_slice.map(&:to_h), timestamp: timestamp, album_count: album_count})
       f.close
+    end
+  end
+
+  def ensure_unique_timestamps(last_id = 0)
+    count = 0
+    Album.where("id >= ?", last_id).order(:created_at).find_each do |album|
+      putc "." if count % 10 == 0
+      while (Album.where(created_at: album.created_at).count > 1) do
+        album.created_at = album.created_at + 1.second
+        album.save
+      end
+      count += 1
     end
   end
 
