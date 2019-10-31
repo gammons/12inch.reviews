@@ -22,22 +22,23 @@ export default class IndexStore {
     })
   }
 
+  count() {
+    return new Promise(resolve => {
+      const store = this.db
+        .transaction(["albums"], "readonly")
+        .objectStore("albums")
+      resolve(store.count())
+    })
+  }
+
   fetch() {
-    const albums = []
     return new Promise(resolve => {
       const store = this.db
         .transaction(["albums"], "readonly")
         .objectStore("albums")
 
-      store.index("timestamp").openCursor(null, "prev").onsuccess = event => {
-        this.cursor = event.target.result
-        if (!this.cursor) {
-          resolve(albums)
-          return
-        }
-
-        albums.push(new AlbumModel(this.cursor.value))
-        this.cursor.continue()
+      store.index("timestamp").getAll().onsuccess = event => {
+        resolve(event.target.result.map(album => new AlbumModel(album)))
       }
     })
   }
@@ -50,6 +51,14 @@ export default class IndexStore {
       }
       txn.objectStore("albums").clear()
     })
+  }
+
+  add(albums: Array<AlbumModel>) {
+    const store = this.db
+      .transaction(["albums"], "readwrite")
+      .objectStore("albums")
+
+    albums.forEach(album => store.add(album))
   }
 
   save(albums: Array<AlbumModel>) {

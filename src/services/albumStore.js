@@ -14,12 +14,14 @@ export default class AlbumStore {
     this.fetcher = new AlbumFetcher()
     this.indexStore = new IndexStore()
     await this.indexStore.initialize()
-    this.albums = await this.indexStore.fetch()
+
+    this.albumCount = await this.indexStore.count()
+
     const data = await this.fetcher.fetch(0)
-    this.albumCount = data.album_count
+    this.remoteAlbumCount = data.album_count
     this.latestAlbums = data.albums
 
-    if (this.albumCount === this.albums.length) {
+    if (this.albumCount === this.remoteAlbumCount) {
       return Promise.resolve()
     }
 
@@ -30,8 +32,9 @@ export default class AlbumStore {
   reconcile() {
     return new Promise(resolve => {
       const handle = async () => {
-        let diff = this.albumCount - this.albums.length
+        let diff = this.remoteAlbumCount - this.albumCount
         let n = 0
+        const newAlbums = []
         while (n < diff) {
           if (n > 0 && n % 1000 === 0) {
             const latest = (this.latestAlbums = await this.fetcher.fetch(
@@ -39,10 +42,10 @@ export default class AlbumStore {
             ))
             this.latestAlbums = latest.albums
           }
-          this.albums.push(this.latestAlbums[n % 1000])
+          newAlbums.push(this.latestAlbums[n % 1000])
           n++
         }
-        this.saveToLocal()
+        this.saveToLocal(newAlbums)
         resolve()
       }
       handle()
@@ -50,8 +53,8 @@ export default class AlbumStore {
   }
 
   // save al
-  saveToLocal() {
-    this.indexStore.save(this.albums)
+  saveToLocal(newAlbums) {
+    this.indexStore.add(newAlbums)
   }
 
   retrieve() {

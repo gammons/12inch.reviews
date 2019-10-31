@@ -46,6 +46,7 @@ const App = () => {
 
   useEffect(() => {
     const albumStore = new AlbumStore()
+
     albumStore.initialize().then(async () => {
       const _albums = await albumStore.retrieve()
       albums.current = _albums
