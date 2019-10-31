@@ -17,7 +17,6 @@ export default class IndexStore {
         if (!this.db.objectStoreNames.contains("albums")) {
           this.setupSchema()
         }
-        resolve()
       }
     })
   }
@@ -27,18 +26,28 @@ export default class IndexStore {
       const store = this.db
         .transaction(["albums"], "readonly")
         .objectStore("albums")
-      resolve(store.count())
+      store.count().onsuccess = event => {
+        resolve(event.target.result)
+      }
     })
   }
 
   fetch() {
+    const albums = []
     return new Promise(resolve => {
       const store = this.db
         .transaction(["albums"], "readonly")
         .objectStore("albums")
 
-      store.index("timestamp").getAll().onsuccess = event => {
-        resolve(event.target.result.map(album => new AlbumModel(album)))
+      store.index("timestamp").openCursor(null, "prev").onsuccess = event => {
+        this.cursor = event.target.result
+        if (!this.cursor) {
+          resolve(albums)
+          return
+        }
+
+        albums.push(new AlbumModel(this.cursor.value))
+        this.cursor.continue()
       }
     })
   }

@@ -47,10 +47,13 @@ const App = () => {
   useEffect(() => {
     const albumStore = new AlbumStore()
 
-    albumStore.initialize().then(async () => {
-      const _albums = await albumStore.retrieve()
-      albums.current = _albums
+    albumStore.initialize().then(async initialAlbums => {
+      albums.current = initialAlbums
       setFilteredAlbums(albums.current)
+      albumStore.reconcile().then(async () => {
+        albums.current = await albumStore.retrieve()
+        setFilteredAlbums(albums.current)
+      })
     })
   }, [])
 

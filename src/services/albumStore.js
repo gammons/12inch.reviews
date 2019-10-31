@@ -11,21 +11,17 @@ export default class AlbumStore {
   albums: Array<AlbumModel>
 
   async initialize() {
+    this.latestAlbums = []
     this.fetcher = new AlbumFetcher()
     this.indexStore = new IndexStore()
-    await this.indexStore.initialize()
 
+    await this.indexStore.initialize()
     this.albumCount = await this.indexStore.count()
 
-    const data = await this.fetcher.fetch(0)
+    const data = await this.fetcher.fetchPreview()
     this.remoteAlbumCount = data.album_count
-    this.latestAlbums = data.albums
 
-    if (this.albumCount === this.remoteAlbumCount) {
-      return Promise.resolve()
-    }
-
-    return this.reconcile()
+    return Promise.resolve(data.albums.map(album => new AlbumModel(album)))
   }
 
   // reconcile localStorage albums with latest albums
@@ -35,12 +31,10 @@ export default class AlbumStore {
         let diff = this.remoteAlbumCount - this.albumCount
         let n = 0
         const newAlbums = []
+
         while (n < diff) {
-          if (n > 0 && n % 1000 === 0) {
-            const latest = (this.latestAlbums = await this.fetcher.fetch(
-              n / 1000
-            ))
-            this.latestAlbums = latest.albums
+          if (n % 1000 === 0) {
+            this.latestAlbums = (await this.fetcher.fetch(n / 1000)).albums
           }
           newAlbums.push(this.latestAlbums[n % 1000])
           n++
@@ -52,7 +46,6 @@ export default class AlbumStore {
     })
   }
 
-  // save al
   saveToLocal(newAlbums) {
     this.indexStore.add(newAlbums)
   }
