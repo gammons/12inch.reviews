@@ -21,17 +21,14 @@ task :create_albums_json_files do
 
   client = Aws::S3::Client.new(region: "us-east-2", credentials: AWS_CREDS)
 
-  # total_files = Dir.glob("albums*.json").length
-  # body = JSON.generate({files: total_files, timestamp: Time.now.to_i})
-  # client.put_object({bucket: "12inch.reviews", key: "metadata.json", acl: "public-read", body: body})
-
+  client.put_object({bucket: "12inch.reviews", key: "initial.json", acl: "public-read", body: File.read("initial.json")})
   Dir.glob("albums*.json").each do |filename|
     File.open(filename, "rb") do |file|
       client.put_object({bucket: "12inch.reviews", key: filename, acl: "public-read", body: file})
     end
   end
 
-  `rm -rf albums*.json`
+  `rm -rf albums*.json initial.json`
 end
 
 task :setup_db do

@@ -54,6 +54,12 @@ class Retriever
     timestamp = Time.now.to_i
     album_count = Album.count
     file_count = album_count / 1000
+
+    preview_albums = Album.order(created_at: :desc).limit(25)
+    f = File.open("initial.json","w")
+    f << JSON.generate({albums: preview_albums.map(&:to_h), timestamp: timestamp, album_count: album_count})
+    f.close
+
     Album.order(created_at: :desc).each_slice(1000).to_a.each_with_index do |albums_slice,idx|
       putc "."
       f = File.open("albums#{idx}.json", "w")
