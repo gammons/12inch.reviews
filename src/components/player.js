@@ -8,6 +8,7 @@ import ProgressBar from "./player/progressBar"
 import NextTrackButton from "./player/nextTrackButton"
 import PrevTrackButton from "./player/prevTrackButton"
 import ArtistAndTrack from "./player/artistAndTrack"
+import VolumeSlider from "./player/volumeSlider"
 
 type Props = {
   uri: string | null
@@ -179,7 +180,8 @@ const Player = (props: Props) => {
           />
         </div>
 
-        <div className="w-full flex justify-center items-center pl-32 md:pl-0">
+        <div className="w-full flex flex-wrap justify-around items-center pl-32 md:pl-0">
+          <div></div>
           <div className="w-full md:w-1/3">
             <div className="w-full flex flex-row justify-around items-center mb-4">
               <PrevTrackButton
@@ -196,19 +198,13 @@ const Player = (props: Props) => {
                 onClick={onRequestNextTrack}
               />
             </div>
-
             <ProgressBar
               percentage={position / trackDuration}
               onClick={progressClick}
             />
-            <input
-              type="range"
-              min={0}
-              max={1}
-              step={0.1}
-              onChange={onSetVolume}
-              value={volume}
-            />
+          </div>
+          <div className="w-full md:w-0 my-4 flex justify-center md:justify-start">
+            <VolumeSlider onSetVolume={onSetVolume} volume={volume} />
           </div>
         </div>
       </div>
