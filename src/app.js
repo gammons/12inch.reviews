@@ -59,10 +59,13 @@ const App = () => {
   useEffect(() => {
     const _accessToken = getUrlParam("accessToken")
     const _refreshToken = getUrlParam("refreshToken")
+    const expires = getUrlParam("expires")
 
     if (!_accessToken) return
 
-    TokenManager.setAccessToken(_accessToken)
+    if (parseInt(expires) > Date.now()) {
+      TokenManager.setAccessToken(_accessToken)
+    }
     TokenManager.setRefreshToken(_refreshToken)
 
     setIsLoggedIn(true)
