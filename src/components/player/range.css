@@ -1,0 +1,47 @@
+.range {
+  outline: 0;
+  border: 0;
+  border-radius: 100px;
+  width: 120px;
+  max-width: 100%;
+  transition: box-shadow 0.2s ease-in-out;
+}
+
+@media screen and (-webkit-min-device-pixel-ratio: 0) {
+  .range {
+    overflow: hidden;
+    height: 20px;
+    -webkit-appearance: none;
+    background-color: #ddd;
+  }
+  .range::-webkit-slider-runnable-track {
+    height: 20px;
+    -webkit-appearance: none;
+    color: #444;
+    margin-top: -1px;
+    transition: box-shadow 0.2s ease-in-out;
+  }
+  .range::-webkit-slider-thumb {
+    width: 20px;
+    -webkit-appearance: none;
+    height: 20px;
+    cursor: ew-resize;
+    background: #fff;
+    box-shadow: -170px 0 0 160px #1597ff, inset 0 0 0 3px #1597ff;
+    border-radius: 50%;
+    transition: box-shadow 0.2s ease-in-out;
+    position: relative;
+  }
+}
+.range::-moz-range-progress {
+  background-color: #43e5f7;
+}
+.range::-moz-range-track {
+  background-color: #9a905d;
+}
+.range::-ms-fill-lower {
+  background-color: #43e5f7;
+}
+.range::-ms-fill-upper {
+  background-color: #9a905d;
+}
