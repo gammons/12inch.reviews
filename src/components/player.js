@@ -1,5 +1,6 @@
 // @flow
 import React, { useState, useRef } from "react"
+import { debounce } from "debounce"
 
 import SpotifyPlayer from "../models/spotifyPlayer"
 import PlayButton from "./player/playButton"
@@ -7,6 +8,7 @@ import ProgressBar from "./player/progressBar"
 import NextTrackButton from "./player/nextTrackButton"
 import PrevTrackButton from "./player/prevTrackButton"
 import ArtistAndTrack from "./player/artistAndTrack"
+import VolumeSlider from "./player/volumeSlider"
 
 type Props = {
   uri: string | null
@@ -28,6 +30,8 @@ const Player = (props: Props) => {
   const [trackTitle, setTrackTitle] = useState("")
   const [trackDuration, setTrackDuration] = useState(0)
   const [albumImageURL, setAlbumImageURL] = useState("")
+  const [volume, setVolume] = useState(0.7)
+  const volumeRef = useRef(null)
 
   let uri = null
   if (props.uri !== null) uri = `spotify:album:${props.uri}`
@@ -35,6 +39,7 @@ const Player = (props: Props) => {
   const setupPlayer = () => {
     const aPlayer = new window.Spotify.Player({
       name: "12inch.reviews Player",
+      volume,
       getOauthToken: props.accessTokenFn
     })
 
@@ -63,7 +68,11 @@ const Player = (props: Props) => {
     })
 
     aPlayer.addListener("ready", ret => {
-      setSpotifyPlayer(new SpotifyPlayer(ret.device_id, props.accessTokenFn))
+      const player = new SpotifyPlayer(ret.device_id, props.accessTokenFn)
+      setSpotifyPlayer(player)
+      volumeRef.current = debounce(val => {
+        aPlayer.setVolume(val)
+      }, 500)
     })
 
     aPlayer.connect()
@@ -137,6 +146,11 @@ const Player = (props: Props) => {
     setTrackNum(trackNum - 1)
   }
 
+  const onSetVolume = ev => {
+    volumeRef.current(ev.target.value)
+    setVolume(ev.target.value)
+  }
+
   const progressTick = () => {
     setPosition(positionRef.current + 1000)
     timer.current = setTimeout(progressTick, 1000)
@@ -166,7 +180,8 @@ const Player = (props: Props) => {
           />
         </div>
 
-        <div className="w-full flex justify-center items-center pl-32 md:pl-0">
+        <div className="w-full flex flex-wrap justify-around items-center pl-32 md:pl-0">
+          <div></div>
           <div className="w-full md:w-1/3">
             <div className="w-full flex flex-row justify-around items-center mb-4">
               <PrevTrackButton
@@ -183,11 +198,13 @@ const Player = (props: Props) => {
                 onClick={onRequestNextTrack}
               />
             </div>
-
             <ProgressBar
               percentage={position / trackDuration}
               onClick={progressClick}
             />
+          </div>
+          <div className="w-full md:w-0 my-4 flex justify-center md:justify-start">
+            <VolumeSlider onSetVolume={onSetVolume} volume={volume} />
           </div>
         </div>
       </div>
