@@ -12,13 +12,16 @@ end
 
 desc "Refresh for new albums"
 task :refresh do
+  puts "Refreshing..."
   Retriever.new.refresh
 end
 
 desc "Create albums json files, and upload them"
 task :create_albums_json_files do
+  puts "Creating album json files..."
   Retriever.new.create_albums_json_files
 
+  puts "\nUploading..."
   client = Aws::S3::Client.new(region: "us-east-2", credentials: AWS_CREDS)
 
   client.put_object({bucket: "12inch.reviews", key: "initial.json", acl: "public-read", body: File.read("initial.json")})
