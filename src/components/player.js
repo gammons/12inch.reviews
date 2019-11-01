@@ -1,5 +1,6 @@
 // @flow
 import React, { useState, useRef } from "react"
+import { debounce } from "debounce"
 
 import SpotifyPlayer from "../models/spotifyPlayer"
 import PlayButton from "./player/playButton"
@@ -28,6 +29,8 @@ const Player = (props: Props) => {
   const [trackTitle, setTrackTitle] = useState("")
   const [trackDuration, setTrackDuration] = useState(0)
   const [albumImageURL, setAlbumImageURL] = useState("")
+  const [volume, setVolume] = useState(0.7)
+  const volumeRef = useRef(null)
 
   let uri = null
   if (props.uri !== null) uri = `spotify:album:${props.uri}`
@@ -35,6 +38,7 @@ const Player = (props: Props) => {
   const setupPlayer = () => {
     const aPlayer = new window.Spotify.Player({
       name: "12inch.reviews Player",
+      volume,
       getOauthToken: props.accessTokenFn
     })
 
@@ -63,7 +67,11 @@ const Player = (props: Props) => {
     })
 
     aPlayer.addListener("ready", ret => {
-      setSpotifyPlayer(new SpotifyPlayer(ret.device_id, props.accessTokenFn))
+      const player = new SpotifyPlayer(ret.device_id, props.accessTokenFn)
+      setSpotifyPlayer(player)
+      volumeRef.current = debounce(val => {
+        aPlayer.setVolume(val)
+      }, 500)
     })
 
     aPlayer.connect()
@@ -137,6 +145,11 @@ const Player = (props: Props) => {
     setTrackNum(trackNum - 1)
   }
 
+  const onSetVolume = ev => {
+    volumeRef.current(ev.target.value)
+    setVolume(ev.target.value)
+  }
+
   const progressTick = () => {
     setPosition(positionRef.current + 1000)
     timer.current = setTimeout(progressTick, 1000)
@@ -187,6 +200,14 @@ const Player = (props: Props) => {
             <ProgressBar
               percentage={position / trackDuration}
               onClick={progressClick}
+            />
+            <input
+              type="range"
+              min={0}
+              max={1}
+              step={0.1}
+              onChange={onSetVolume}
+              value={volume}
             />
           </div>
         </div>
