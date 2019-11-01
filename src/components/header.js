@@ -7,6 +7,7 @@ import SpotifyLoginButton from "./login/spotifyLoginButton"
 
 type Props = {
   onSpotifyLoginClick: () => void,
+  onLogout: () => void,
   isLoggedIn: boolean
 }
 
@@ -29,6 +30,14 @@ const Header = (props: Props) => {
       <div className="py-8 md:p-0 m-auto sm:m-0">
         {!props.isLoggedIn && (
           <SpotifyLoginButton onClick={props.onSpotifyLoginClick} />
+        )}
+        {props.isLoggedIn && (
+          <a
+            onClick={props.onLogout}
+            className="cursor-pointer text-xl text-gray-600"
+          >
+            Logout
+          </a>
         )}
       </div>
     </div>

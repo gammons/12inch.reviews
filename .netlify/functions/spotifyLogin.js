@@ -28,7 +28,9 @@ exports.handler = async (event, context, callback) => {
   })
 
   const data = await resp.json()
-  const redirectArgs = `accessToken=${data.access_token}&refreshToken=${data.refresh_token}&expires_in=${data.expires_in}`
+  const date = new Date()
+  const expires = date.setHours(date.getHours() + 1)
+  const redirectArgs = `accessToken=${data.access_token}&refreshToken=${data.refresh_token}&expires=${expires}`
 
   callback(null, {
     statusCode: 301,

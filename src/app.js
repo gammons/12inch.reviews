@@ -93,10 +93,16 @@ const App = () => {
     setFilteredAlbums(AlbumSearch(albums.current, search))
   }
 
+  const onLogout = () => {
+    TokenManager.clearTokens()
+    setIsLoggedIn(false)
+  }
+
   return (
     <div className="flex flex-col items-stretch min-h-screen">
       <Header
         isLoggedIn={isLoggedIn}
+        onLogout={onLogout}
         onSpotifyLoginClick={onSpotifyLoginClick}
       />
 

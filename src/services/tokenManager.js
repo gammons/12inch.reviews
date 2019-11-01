@@ -59,6 +59,12 @@ const TokenManager = {
     const json = await resp.json()
 
     return json
+  },
+
+  clearTokens: () => {
+    window.localStorage.setItem("refreshToken", null)
+    window.localStorage.setItem("accessToken", null)
+    window.localStorage.setItem("tokenExpires", null)
   }
 }
 
