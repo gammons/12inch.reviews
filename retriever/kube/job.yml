@@ -2,7 +2,6 @@ apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
   name: refresher
-  namespace: 12inch-reviews
 spec:
   schedule: "30 * * * *"
   jobTemplate:
@@ -26,6 +25,16 @@ spec:
                   secretKeyRef:
                     name: 12inchreviews-secrets
                     key: spotifyClientSecret
+              - name: AWS_ACCESS_KEY_ID
+                valueFrom:
+                  secretKeyRef:
+                    name: 12inchreviews-secrets
+                    key: awsAccessKeyId
+              - name: AWS_SECRET_ACCESS_KEY
+                valueFrom:
+                  secretKeyRef:
+                    name: 12inchreviews-secrets
+                    key: awsSecretAccessKey
             command:
             - "rake"
             - "test"

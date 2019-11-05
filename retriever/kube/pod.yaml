@@ -1,0 +1,33 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: consumesec
+spec:
+  containers:
+  - name: shell
+    image: centos:7
+    env:
+      - name: SPOTIFY_CLIENT_ID
+        valueFrom:
+          secretKeyRef:
+            name: 12inchreviews-secrets
+            key: spotifyClientId
+      - name: SPOTIFY_CLIENT_SECRET
+        valueFrom:
+          secretKeyRef:
+            name: 12inchreviews-secrets
+            key: spotifyClientSecret
+      - name: AWS_ACCESS_KEY_ID
+        valueFrom:
+          secretKeyRef:
+            name: 12inchreviews-secrets
+            key: awsAccessKeyId
+      - name: AWS_SECRET_ACCESS_KEY
+        valueFrom:
+          secretKeyRef:
+            name: 12inchreviews-secrets
+            key: awsSecretAccessKey
+    command:
+      - "bin/bash"
+      - "-c"
+      - "sleep 10000"
