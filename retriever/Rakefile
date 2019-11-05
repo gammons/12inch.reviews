@@ -51,6 +51,8 @@ task :test do
   puts "testing!"
   puts "SPOTIFY_CLIENT_ID = '#{ENV['SPOTIFY_CLIENT_ID']}'"
   puts "SPOTIFY_CLIENT_SECRET = '#{ENV['SPOTIFY_CLIENT_SECRET']}'"
+  puts "AWS_ACCESS_KEY_ID = '#{ENV['AWS_ACCESS_KEY_ID']}'"
+  puts "AWS_SECRET_ACCESS_KEY = '#{ENV['AWS_SECRET_ACCESS_KEY']}'"
 end
 
 task default: :refresh
