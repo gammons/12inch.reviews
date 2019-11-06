@@ -1,45 +1,54 @@
 require "aws-sdk-s3"
+require "dotenv"
 
 require_relative "retrieve"
 require_relative "lib/db_setup"
 
+Dotenv.load
+
 AWS_CREDS = Aws::Credentials.new(ENV['AWS_ACCESS_KEY_ID'], ENV['AWS_SECRET_ACCESS_KEY'])
+S3_CLIENT = Aws::S3::Client.new(region: "us-east-2", credentials: AWS_CREDS)
 
-desc "Backfill all the albums"
-task :backfill do
-  Retriever.new.backfill
-end
+namespace :albums do
+  desc "Backfill all the albums into db.  Warning - many hours! Safe to re-run."
+  task :backfill do
+    Retriever.new.backfill
+  end
 
-desc "Refresh for new albums"
-task :refresh do
-  puts "Refreshing..."
-  Retriever.new.refresh
-end
+  desc "Refresh for new albums, insert into db"
+  task :refresh do
+    puts "Refreshing..."
+    Retriever.new.refresh
+  end
 
-desc "Create albums json files, and upload them"
-task :create_albums_json_files do
-  puts "Creating album json files..."
-  Retriever.new.create_albums_json_files
+  task :create_json_files do
+    puts "Creating album json files..."
+    Retriever.new.create_albums_json_files
+  end
 
-  puts "\nUploading..."
-  client = Aws::S3::Client.new(region: "us-east-2", credentials: AWS_CREDS)
+  task :upload_albums_json_files do
+    puts "\nUploading..."
 
-  client.put_object({bucket: "12inch.reviews", key: "initial.json", acl: "public-read", body: File.read("initial.json")})
-  Dir.glob("albums*.json").each do |filename|
-    File.open(filename, "rb") do |file|
-      client.put_object({bucket: "12inch.reviews", key: filename, acl: "public-read", body: file})
+    S3_CLIENT.put_object({bucket: "12inch.reviews", key: "initial.json", acl: "public-read", body: File.read("initial.json")})
+    Dir.glob("albums*.json").each do |filename|
+      File.open(filename, "rb") do |file|
+        S3_CLIENT.put_object({bucket: "12inch.reviews", key: filename, acl: "public-read", body: file})
+      end
     end
   end
 
-  `rm -rf albums*.json initial.json`
+  task :remove_albums_files do
+    `rm -rf albums*.json initial.json`
+  end
+
+  desc "Refresh albums and upload the files"
+  task :refresh_and_upload => %i[refresh create_json_files upload_json_files remove_json_files db:backup_to_s3]
 end
+
+
 
 task :ensure_unique_timestamps do
   Retriever.new.ensure_unique_timestamps
-end
-
-task :setup_db do
-  DBSetup.new.create!
 end
 
 task :docker_build do
@@ -47,12 +56,24 @@ task :docker_build do
   `docker push gammons1/12inch.reviews:latest`
 end
 
-task :test do
-  puts "testing!"
-  puts "SPOTIFY_CLIENT_ID = '#{ENV['SPOTIFY_CLIENT_ID']}'"
-  puts "SPOTIFY_CLIENT_SECRET = '#{ENV['SPOTIFY_CLIENT_SECRET']}'"
-  puts "AWS_ACCESS_KEY_ID = '#{ENV['AWS_ACCESS_KEY_ID']}'"
-  puts "AWS_SECRET_ACCESS_KEY = '#{ENV['AWS_SECRET_ACCESS_KEY']}'"
+namespace :db do
+  desc "Sets up new empty DB"
+  task :setup do
+    DBSetup.new.create!
+  end
+
+  desc "Restores db file from s3"
+  task :restore_from_s3 do
+    puts "restoring from s3..."
+    S3_CLIENT.get_object({bucket: "12inch.reviews", key: "albums.db", response_target: "albums.db"})
+  end
+
+  task :backup_to_s3 do
+    puts "backing up to s3..."
+    File.open("albums.db", "rb") do |file|
+      S3_CLIENT.put_object({bucket: "12inch.reviews", key: "albums.db", acl: "public-read", body: file})
+    end
+  end
 end
 
 task default: :refresh
