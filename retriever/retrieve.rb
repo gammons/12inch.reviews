@@ -14,7 +14,7 @@ Dotenv.load
 
 ActiveRecord::Base.establish_connection(
   adapter: "sqlite3",
-  database: "albums.db"
+  database: "#{ENV['ALBUM_STORE_PATH']}/albums.db"
 )
 
 class Retriever
