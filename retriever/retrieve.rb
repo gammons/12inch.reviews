@@ -1,16 +1,11 @@
 require "http"
 require "json"
-require "dotenv"
 require "logger"
 require "active_record"
-
-require "byebug"
 
 require_relative "lib/album"
 require_relative "lib/pitchfork"
 require_relative "lib/spotify"
-
-Dotenv.load
 
 ActiveRecord::Base.establish_connection(
   adapter: "sqlite3",
