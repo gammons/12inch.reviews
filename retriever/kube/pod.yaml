@@ -1,11 +1,18 @@
 apiVersion: v1
 kind: Pod
 metadata:
-  name: consumesec
+  name: 12inchpod
 spec:
+  volumes:
+  - name: mypd
+    persistentVolumeClaim:
+      claimName: albumstore
   containers:
-  - name: shell
-    image: centos:7
+  - name: 12inch-reviews
+    image: gammons1/12inch.reviews:latest
+    volumeMounts:
+    - name: mypd
+      mountPath: "/tmp/albumStore"
     env:
       - name: SPOTIFY_CLIENT_ID
         valueFrom:
@@ -28,6 +35,6 @@ spec:
             name: 12inchreviews-secrets
             key: awsSecretAccessKey
     command:
-      - "bin/bash"
+      - "/bin/bash"
       - "-c"
       - "sleep 10000"

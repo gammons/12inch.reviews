@@ -11,10 +11,19 @@ spec:
           restartPolicy: Never
           imagePullSecrets:
           - name: regcred
+          volumes:
+          - name: mypd
+            persistentVolumeClaim:
+              claimName: albumstore
           containers:
           - name: 12inch-reviews
             image: gammons1/12inch.reviews:latest
+            volumeMounts:
+            - name: mypd
+              mountPath: "/tmp/albumStore"
             env:
+              - name: ALBUM_STORE_PATH
+                value: /tmp/albumStore
               - name: SPOTIFY_CLIENT_ID
                 valueFrom:
                   secretKeyRef:
@@ -37,4 +46,5 @@ spec:
                     key: awsSecretAccessKey
             command:
             - "rake"
-            - "test"
+            - "refresh"
+            - "create_albums_json_files"
