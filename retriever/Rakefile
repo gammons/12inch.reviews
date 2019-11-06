@@ -41,14 +41,12 @@ namespace :albums do
     `rm -rf albums*.json initial.json`
   end
 
+  task :ensure_unique_timestamps do
+    Retriever.new.ensure_unique_timestamps
+  end
+
   desc "Refresh albums and upload the files"
   task :refresh_and_upload => %i[refresh create_json_files upload_json_files remove_json_files db:backup_to_s3]
-end
-
-
-
-task :ensure_unique_timestamps do
-  Retriever.new.ensure_unique_timestamps
 end
 
 task :docker_build do
@@ -76,4 +74,4 @@ namespace :db do
   end
 end
 
-task default: :refresh
+task default: "albums:refresh_and_upload"
