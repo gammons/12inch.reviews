@@ -37,7 +37,7 @@ namespace :albums do
     end
   end
 
-  task :remove_albums_files do
+  task :remove_json_files do
     `rm -rf albums*.json initial.json`
   end
 
