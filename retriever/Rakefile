@@ -46,7 +46,7 @@ namespace :albums do
   end
 
   desc "Refresh albums and upload the files"
-  task :refresh_and_upload => %i[refresh create_json_files upload_json_files remove_json_files db:backup_to_s3]
+  task :refresh_and_upload => %i[db:restore_from_s3 refresh create_json_files upload_json_files remove_json_files db:backup_to_s3]
 end
 
 task :docker_build do
