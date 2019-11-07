@@ -1,7 +1,10 @@
 require "http"
 require "json"
+require "dotenv"
 require "logger"
 require "active_record"
+
+Dotenv.load
 
 require_relative "lib/album"
 require_relative "lib/pitchfork"
@@ -44,7 +47,6 @@ class Retriever
         return if dupe_count > 3
       end
     end
-    ensure_unique_timestamps(last_id)
   end
 
   def create_albums_json_files
@@ -63,18 +65,6 @@ class Retriever
 
       f << JSON.generate({albums: albums_slice.map(&:to_h), timestamp: timestamp, album_count: album_count})
       f.close
-    end
-  end
-
-  def ensure_unique_timestamps(last_id = 0)
-    count = 0
-    Album.where("id >= ?", last_id).order(:created_at).find_each do |album|
-      putc "." if count % 10 == 0
-      while (Album.where(created_at: album.created_at).count > 1) do
-        album.created_at = album.created_at + 1.second
-        album.save
-      end
-      count += 1
     end
   end
 
