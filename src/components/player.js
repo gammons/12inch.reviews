@@ -50,7 +50,6 @@ const Player = (props: Props) => {
     aPlayer.addListener("playback_error", console.error)
 
     aPlayer.addListener("player_state_changed", state => {
-      console.log("player state changed", state)
       setArtist(state.track_window.current_track.artists[0].name)
       setAlbum(state.track_window.current_track.album.name)
       setTrackTitle(state.track_window.current_track.name)
