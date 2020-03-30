@@ -25,6 +25,7 @@ const Player = (props: Props) => {
   positionRef.current = position
 
   const [trackNum, setTrackNum] = useState(0)
+  const [hasNextTrack, setHasNextTrack] = useState(false)
   const [artist, setArtist] = useState("")
   const [album, setAlbum] = useState("")
   const [trackTitle, setTrackTitle] = useState("")
@@ -49,12 +50,14 @@ const Player = (props: Props) => {
     aPlayer.addListener("playback_error", console.error)
 
     aPlayer.addListener("player_state_changed", state => {
+      console.log("player state changed", state)
       setArtist(state.track_window.current_track.artists[0].name)
       setAlbum(state.track_window.current_track.album.name)
       setTrackTitle(state.track_window.current_track.name)
       setTrackDuration(state.track_window.current_track.duration_ms)
       setAlbumImageURL(state.track_window.current_track.album.images[2].url)
       setTrackNum(state.track_window.previous_tracks.length)
+      setHasNextTrack(state.track_window.next_tracks.length > 0)
       setPosition(state.position)
 
       setIsPlaying(!state.paused)
@@ -129,6 +132,7 @@ const Player = (props: Props) => {
   }
 
   const onRequestNextTrack = () => {
+    if (!hasNextTrack) return
     if (isPlaying) {
       spotifyPlayer.play(uri, trackNum + 1, 0)
     }
@@ -137,13 +141,13 @@ const Player = (props: Props) => {
   }
 
   const onRequestPrevTrack = () => {
-    if (trackNum == 0) return
+    const trackToPlay = trackNum === 0 ? 0 : trackNum - 1
 
     if (isPlaying) {
-      spotifyPlayer.play(uri, trackNum - 1, 0)
+      spotifyPlayer.play(uri, trackToPlay, 0)
     }
     setPosition(0)
-    setTrackNum(trackNum - 1)
+    setTrackNum(trackToPlay)
   }
 
   const onSetVolume = ev => {
@@ -194,7 +198,7 @@ const Player = (props: Props) => {
                 onClick={onTogglePlay}
               />
               <NextTrackButton
-                disabled={uri === null}
+                disabled={uri === null || !hasNextTrack}
                 onClick={onRequestNextTrack}
               />
             </div>
