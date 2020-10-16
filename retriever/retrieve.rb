@@ -55,15 +55,15 @@ class Retriever
     file_count = album_count / 1000
 
     preview_albums = Album.order(created_at: :desc).limit(25)
-    f = File.open("initial.json","w")
-    f << JSON.generate({albums: preview_albums.map(&:to_h), timestamp: timestamp, album_count: album_count})
+    f = File.open("initial.json", "w")
+    f << JSON.generate({ albums: preview_albums.map(&:to_h), timestamp: timestamp, album_count: album_count })
     f.close
 
-    Album.order(created_at: :desc).each_slice(1000).to_a.each_with_index do |albums_slice,idx|
+    Album.order(created_at: :desc).each_slice(1000).to_a.each_with_index do |albums_slice, idx|
       putc "."
       f = File.open("albums#{idx}.json", "w")
 
-      f << JSON.generate({albums: albums_slice.map(&:to_h), timestamp: timestamp, album_count: album_count})
+      f << JSON.generate({ albums: albums_slice.map(&:to_h), timestamp: timestamp, album_count: album_count })
       f.close
     end
   end
@@ -104,6 +104,5 @@ class Retriever
     album
   end
 
-  def write_results
-  end
+  def write_results; end
 end

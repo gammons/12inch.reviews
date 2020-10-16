@@ -15,26 +15,38 @@ class Pitchfork
       album.created_at = Time.at(result["timestamp"] / 1000)
       album.title = result["title"]
 
-      if result["artists"][0].nil?
-        album.artist = "Various artists"
-      else
-        album.artist = result["artists"][0]["display_name"]
-      end
+      album.artist = if result["artists"][0].nil?
+                       "Various artists"
+                     else
+                       result["artists"][0]["display_name"]
+                     end
 
-      next if result["tombstone"]["albums"].length == 0
+      next if result["tombstone"]["albums"].empty?
 
       album.rating = result["tombstone"]["albums"][0]["rating"]["display_rating"]
-      album.bnm = result["tombstone"]["albums"][0]["rating"]["bnm"] rescue false
-      album.bnr = result["tombstone"]["albums"][0]["rating"]["bnr"] rescue false
-      album.label = result["tombstone"]["albums"][0]["labels_and_years"][0]["labels"][0]["display_name"] rescue "Unknown"
+      album.bnm = begin
+                    result["tombstone"]["albums"][0]["rating"]["bnm"]
+                  rescue StandardError
+                    false
+                  end
+      album.bnr = begin
+                    result["tombstone"]["albums"][0]["rating"]["bnr"]
+                  rescue StandardError
+                    false
+                  end
+      album.label = begin
+                      result["tombstone"]["albums"][0]["labels_and_years"][0]["labels"][0]["display_name"]
+                    rescue StandardError
+                      "Unknown"
+                    end
       album.url = "https://pitchfork.com" + result["url"]
-      album.description = result["socialDescription"]
+      album.description = result["seoDescription"]
 
-      if result["genres"][0].nil?
-        album.genre = "Unknown"
-      else
-        album.genre = result["genres"][0]["display_name"]
-      end
+      album.genre = if result["genres"][0].nil?
+                      "Unknown"
+                    else
+                      result["genres"][0]["display_name"]
+                    end
 
       album
     end
