@@ -43,9 +43,9 @@ const Header = (props: Props) => {
             )}
           </div>
         </div>
-        <h4 className="text-lg text-gray-600 hidden md:block">
+        <h1 className="text-lg text-gray-600 hidden md:block">
           Listen to Pitchfork reviews on Spotify - directly in your browser!
-        </h4>
+        </h1>
       </div>
     </React.Fragment>
   )
