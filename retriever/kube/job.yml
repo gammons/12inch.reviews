@@ -18,7 +18,7 @@ spec:
               claimName: albumstore
           containers:
           - name: 12inch-reviews
-            image: gammons1/12inch.reviews:latest
+            image: gammons1/12inch.reviews:v1
             volumeMounts:
             - name: mypd
               mountPath: "/tmp/albumStore"

@@ -50,8 +50,8 @@ namespace :albums do
 end
 
 task :docker_build do
-  `docker build -t gammons1/12inch.reviews:latest .`
-  `docker push gammons1/12inch.reviews:latest`
+  `docker build -t gammons1/12inch.reviews:v1 .`
+  `docker push gammons1/12inch.reviews:v1`
 end
 
 namespace :db do
