@@ -1,17 +1,18 @@
-require "http"
-require "json"
-require "dotenv"
-require "logger"
-require "active_record"
+require 'http'
+require 'json'
+require 'dotenv'
+require 'logger'
+require 'active_record'
+require 'spotify_search/spotify_search'
+require 'byebug'
 
 Dotenv.load
 
-require_relative "lib/album"
-require_relative "lib/pitchfork"
-require_relative "lib/spotify"
+require_relative 'lib/album'
+require_relative 'lib/pitchfork'
 
 ActiveRecord::Base.establish_connection(
-  adapter: "sqlite3",
+  adapter: 'sqlite3',
   database: "#{ENV['ALBUM_STORE_PATH']}/albums.db"
 )
 
@@ -21,7 +22,7 @@ class Retriever
   def initialize
     @logger = Logger.new(STDOUT)
     @logger.level = Logger::DEBUG
-    @spotify = Spotify.new(ENV["SPOTIFY_CLIENT_ID"], ENV["SPOTIFY_CLIENT_SECRET"], @logger)
+    @spotify = SpotifySearch::Searcher.new
     @albums = []
   end
 
@@ -41,7 +42,7 @@ class Retriever
     last_id = Album.maximum(:id)
     (0..30).each do |page|
       puts "============ Page #{page} ==========="
-      Pitchfork.new.get_albums(page, "desc").each do |album|
+      Pitchfork.new.get_albums(page, 'desc').each do |album|
         process_album(album)
         dupe_count += 1 if Album.where(pitchfork_id: album.pitchfork_id).count >= 1
         return if dupe_count > 3
@@ -55,13 +56,13 @@ class Retriever
     file_count = album_count / 1000
 
     preview_albums = Album.order(created_at: :desc).limit(25)
-    f = File.open("initial.json", "w")
+    f = File.open('initial.json', 'w')
     f << JSON.generate({ albums: preview_albums.map(&:to_h), timestamp: timestamp, album_count: album_count })
     f.close
 
     Album.order(created_at: :desc).each_slice(1000).to_a.each_with_index do |albums_slice, idx|
-      putc "."
-      f = File.open("albums#{idx}.json", "w")
+      putc '.'
+      f = File.open("albums#{idx}.json", 'w')
 
       f << JSON.generate({ albums: albums_slice.map(&:to_h), timestamp: timestamp, album_count: album_count })
       f.close
@@ -84,7 +85,7 @@ class Retriever
     end
 
     if album.valid?
-      putc "."
+      putc '.'
       album.save!
     else
       puts "Unable to find #{album.artist} - #{album.title}"
@@ -92,13 +93,13 @@ class Retriever
   end
 
   def add_spotify_info_to_album(album)
-    spotify_album = @spotify.search(album.artist, album.title)
+    spotify_album = @spotify.album_search(album.artist, album.title)
     sleep 0.5
 
     unless spotify_album.nil?
-      album.spotify_artist_id = spotify_album["artists"][0]["id"]
-      album.spotify_album_id = spotify_album["id"]
-      album.image_url = spotify_album["images"][0]["url"]
+      album.spotify_artist_id = spotify_album['artists'][0]['id']
+      album.spotify_album_id = spotify_album['id']
+      album.image_url = spotify_album['images'][0]['url']
     end
 
     album

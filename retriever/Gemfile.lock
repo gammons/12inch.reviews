@@ -1,69 +1,83 @@
+GIT
+  remote: https://github.com/gammons/spotify-search.git
+  revision: ef38e30dac72f909ffd21a736357d84733bf23a8
+  branch: main
+  specs:
+    spotify-search (0.1.0)
+      http (~> 5.0)
+      i18n
+
 GEM
   remote: https://rubygems.org/
   specs:
-    activemodel (6.0.0)
-      activesupport (= 6.0.0)
-    activerecord (6.0.0)
-      activemodel (= 6.0.0)
-      activesupport (= 6.0.0)
-    activesupport (6.0.0)
+    activemodel (6.1.4.1)
+      activesupport (= 6.1.4.1)
+    activerecord (6.1.4.1)
+      activemodel (= 6.1.4.1)
+      activesupport (= 6.1.4.1)
+    activesupport (6.1.4.1)
       concurrent-ruby (~> 1.0, >= 1.0.2)
-      i18n (>= 0.7, < 2)
-      minitest (~> 5.1)
-      tzinfo (~> 1.1)
-      zeitwerk (~> 2.1, >= 2.1.8)
-    addressable (2.7.0)
+      i18n (>= 1.6, < 2)
+      minitest (>= 5.1)
+      tzinfo (~> 2.0)
+      zeitwerk (~> 2.3)
+    addressable (2.8.0)
       public_suffix (>= 2.0.2, < 5.0)
-    aws-eventstream (1.0.3)
-    aws-partitions (1.228.0)
-    aws-sdk-core (3.72.0)
-      aws-eventstream (~> 1.0, >= 1.0.2)
-      aws-partitions (~> 1, >= 1.228.0)
+    aws-eventstream (1.1.1)
+    aws-partitions (1.490.0)
+    aws-sdk-core (3.119.1)
+      aws-eventstream (~> 1, >= 1.0.2)
+      aws-partitions (~> 1, >= 1.239.0)
       aws-sigv4 (~> 1.1)
       jmespath (~> 1.0)
-    aws-sdk-kms (1.25.0)
-      aws-sdk-core (~> 3, >= 3.71.0)
+    aws-sdk-kms (1.46.0)
+      aws-sdk-core (~> 3, >= 3.119.0)
       aws-sigv4 (~> 1.1)
-    aws-sdk-s3 (1.51.0)
-      aws-sdk-core (~> 3, >= 3.71.0)
+    aws-sdk-s3 (1.99.0)
+      aws-sdk-core (~> 3, >= 3.119.0)
       aws-sdk-kms (~> 1)
       aws-sigv4 (~> 1.1)
-    aws-sigv4 (1.1.0)
-      aws-eventstream (~> 1.0, >= 1.0.2)
-    byebug (11.0.1)
-    concurrent-ruby (1.1.5)
+    aws-sigv4 (1.2.4)
+      aws-eventstream (~> 1, >= 1.0.2)
+    byebug (11.1.3)
+    concurrent-ruby (1.1.9)
     domain_name (0.5.20190701)
       unf (>= 0.0.5, < 1.0.0)
-    dotenv (2.7.5)
-    ffi (1.13.1)
+    dotenv (2.7.6)
+    ffi (1.15.3)
     ffi-compiler (1.0.1)
       ffi (>= 1.0.0)
       rake
     fuzzy_match (2.1.0)
-    http (4.4.1)
+    http (5.0.1)
       addressable (~> 2.3)
       http-cookie (~> 1.0)
       http-form_data (~> 2.2)
-      http-parser (~> 1.2.0)
-    http-cookie (1.0.3)
+      llhttp-ffi (~> 0.3.0)
+    http-cookie (1.0.4)
       domain_name (~> 0.5)
     http-form_data (2.3.0)
-    http-parser (1.2.1)
-      ffi-compiler (>= 1.0, < 2.0)
-    i18n (1.7.0)
+    i18n (1.8.10)
       concurrent-ruby (~> 1.0)
     jmespath (1.4.0)
-    minitest (5.12.2)
+    llhttp-ffi (0.3.1)
+      ffi-compiler (~> 1.0)
+      rake (~> 13.0)
+    mini_portile2 (2.6.1)
+    minitest (5.14.4)
+    nokogiri (1.12.3)
+      mini_portile2 (~> 2.6.1)
+      racc (~> 1.4)
     public_suffix (4.0.6)
-    rake (13.0.1)
-    sqlite3 (1.4.1)
-    thread_safe (0.3.6)
-    tzinfo (1.2.5)
-      thread_safe (~> 0.1)
+    racc (1.5.2)
+    rake (13.0.6)
+    sqlite3 (1.4.2)
+    tzinfo (2.0.4)
+      concurrent-ruby (~> 1.0)
     unf (0.1.4)
       unf_ext
     unf_ext (0.0.7.7)
-    zeitwerk (2.2.0)
+    zeitwerk (2.4.2)
 
 PLATFORMS
   ruby
@@ -75,7 +89,9 @@ DEPENDENCIES
   dotenv
   fuzzy_match
   http
+  nokogiri
+  spotify-search!
   sqlite3
 
 BUNDLED WITH
-   2.1.4
+   2.2.15
