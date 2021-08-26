@@ -11,39 +11,41 @@ spec:
         spec:
           restartPolicy: Never
           imagePullSecrets:
-          - name: regcred
+            - name: regcred
           volumes:
-          - name: mypd
-            persistentVolumeClaim:
-              claimName: albumstore
-          containers:
-          - name: 12inch-reviews
-            image: gammons1/12inch.reviews:v2
-            volumeMounts:
             - name: mypd
-              mountPath: "/tmp/albumStore"
-            env:
-              - name: ALBUM_STORE_PATH
-                value: /tmp/albumStore
-              - name: SPOTIFY_CLIENT_ID
-                valueFrom:
-                  secretKeyRef:
-                    name: 12inchreviews-secrets
-                    key: spotifyClientId
-              - name: SPOTIFY_CLIENT_SECRET
-                valueFrom:
-                  secretKeyRef:
-                    name: 12inchreviews-secrets
-                    key: spotifyClientSecret
-              - name: AWS_ACCESS_KEY_ID
-                valueFrom:
-                  secretKeyRef:
-                    name: 12inchreviews-secrets
-                    key: awsAccessKeyId
-              - name: AWS_SECRET_ACCESS_KEY
-                valueFrom:
-                  secretKeyRef:
-                    name: 12inchreviews-secrets
-                    key: awsSecretAccessKey
-            command:
-            - "rake"
+              persistentVolumeClaim:
+                claimName: albumstore
+          containers:
+            - name: 12inch-reviews
+              image: gammons1/12inch.reviews:v2
+              volumeMounts:
+                - name: mypd
+                  mountPath: "/tmp/albumStore"
+              env:
+                - name: ALBUM_STORE_PATH
+                  value: /tmp/albumStore
+                - name: SPOTIFY_CLIENT_ID
+                  valueFrom:
+                    secretKeyRef:
+                      name: 12inchreviews-secrets
+                      key: spotifyClientId
+                - name: SPOTIFY_CLIENT_SECRET
+                  valueFrom:
+                    secretKeyRef:
+                      name: 12inchreviews-secrets
+                      key: spotifyClientSecret
+                - name: AWS_ACCESS_KEY_ID
+                  valueFrom:
+                    secretKeyRef:
+                      name: 12inchreviews-secrets
+                      key: awsAccessKeyId
+                - name: AWS_SECRET_ACCESS_KEY
+                  valueFrom:
+                    secretKeyRef:
+                      name: 12inchreviews-secrets
+                      key: awsSecretAccessKey
+              command:
+                - "bundle"
+                - "exec"
+                - "rake"
