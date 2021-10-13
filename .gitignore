@@ -27,3 +27,4 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 .netlify/functions-build
+.netlify/state.json
