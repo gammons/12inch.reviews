@@ -32,7 +32,7 @@ The access token only has a shelf life of 1 hour, so refreshing occurs automatic
 ## Running locally
 
 1. In order for the player to work, You'll need a `.env` file that includes `SPOTIFY_CLIENT_ID` and `SPOTIFY_CLIENT_SECRET`.
-2. `yarn && yarn start`
+2. Run `netlify dev`
 
 ## License
 
