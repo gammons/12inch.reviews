@@ -46,7 +46,7 @@ const App = () => {
   useEffect(() => {
     const albumStore = new AlbumStore()
 
-    albumStore.initialize().then(initialAlbums => {
+    albumStore.initialize().then((initialAlbums) => {
       albums.current = initialAlbums
       setFilteredAlbums(albums.current)
       albumStore.reconcile().then(async () => {
@@ -79,7 +79,7 @@ const App = () => {
     100
   )
 
-  const onPlayAlbum = uri => {
+  const onPlayAlbum = (uri) => {
     if (isLoggedIn) {
       setPlayingAlbumURI(uri)
     } else {
@@ -89,7 +89,7 @@ const App = () => {
     }
   }
 
-  const onSearch = search => {
+  const onSearch = (search) => {
     setFilteredAlbums(AlbumSearch(albums.current, search))
   }
 
