@@ -9,6 +9,7 @@
     "@fortawesome/react-fontawesome": "^0.1.5",
     "autoprefixer": "^9.6.1",
     "debounce": "^1.2.0",
+    "encoding": "^0.1.13",
     "http-proxy-middleware": "^0.20.0",
     "netlify-lambda": "^1.6.3",
     "postcss-cli": "^6.1.3",
