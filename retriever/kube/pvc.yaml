@@ -3,11 +3,10 @@ kind: PersistentVolumeClaim
 metadata:
   name: albumstore
   namespace: 12inch-reviews
-  annotations:
-    volume.beta.kubernetes.io/storage-class: "nfs-client"
 spec:
+  storageClassName: nfs-client
   accessModes:
-  - ReadWriteOnce
+    - ReadWriteOnce
   resources:
     requests:
       storage: 1Gi
