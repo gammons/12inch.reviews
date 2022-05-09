@@ -17,8 +17,6 @@ ActiveRecord::Base.establish_connection(
 )
 
 class Retriever
-  START_AT_PAGE = 874
-
   def initialize
     @logger = Logger.new(STDOUT)
     @logger.level = Logger::DEBUG
@@ -27,11 +25,15 @@ class Retriever
   end
 
   def backfill
-    160.upto(START_AT_PAGE).each do |page|
+    pitchfork = Pitchfork.new
+    page = 0
+    albums = []
+
+    (0..1000).each do |page|
       puts "============ Page #{page} ==========="
-      Pitchfork.new.get_albums(page).each do |album|
-        process_album(album)
-      end
+      albums = pitchfork.get_albums(page, 'desc')
+      albums.each {|a| process_album(a) }
+      page += 1
     end
 
     @logger.close
@@ -93,8 +95,16 @@ class Retriever
   end
 
   def add_spotify_info_to_album(album)
-    spotify_album = @spotify.album_search(album.artist, album.title)
-    sleep 0.5
+    done = false
+    while !done do
+      begin
+        spotify_album = @spotify.album_search(album.artist, album.title)
+        done = true
+      rescue HTTP::ConnectionError
+        sleep 1
+      end
+    end
+    sleep 0.25
 
     unless spotify_album.nil?
       album.spotify_artist_id = spotify_album['artists'][0]['id']

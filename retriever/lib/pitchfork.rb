@@ -7,13 +7,17 @@ class Pitchfork
   PER_PAGE = 25
 
   def get_albums(page = 0, sort = "asc")
-    resp = JSON.parse(HTTP.get("https://pitchfork.com/api/v2/search/?types=reviews&hierarchy=sections%2Freviews%2Falbums%2Cchannels%2Freviews%2Falbums&sort=publishdate%20#{sort}&size=#{PER_PAGE}&start=#{page * PER_PAGE}"))
+    resp = nil
+    while resp.nil?
+      resp = JSON.parse(HTTP.get("https://pitchfork.com/api/v2/search/?types=reviews&hierarchy=sections%2Freviews%2Falbums%2Cchannels%2Freviews%2Falbums&sort=publishdate%20#{sort}&size=#{PER_PAGE}&start=#{page * PER_PAGE}")) rescue nil
+      sleep 1
+    end
 
     albums = resp["results"]["list"].map do |result|
       album = Album.new
       album.pitchfork_id = result["id"]
       album.created_at = Time.at(result["timestamp"] / 1000)
-      album.title = result["title"]
+      album.title = result["title"].gsub(/<\/?[^>]*>/, "")
 
       album.artist = if result["artists"][0].nil?
                        "Various artists"
