@@ -12,19 +12,12 @@ spec:
           restartPolicy: Never
           imagePullSecrets:
             - name: regcred
-          volumes:
-            - name: mypd
-              persistentVolumeClaim:
-                claimName: albumstore
           containers:
             - name: 12inch-reviews
               image: gammons1/12inch.reviews:v4
-              volumeMounts:
-                - name: mypd
-                  mountPath: "/tmp/albumStore"
               env:
                 - name: ALBUM_STORE_PATH
-                  value: /tmp/albumStore
+                  value: .
                 - name: SPOTIFY_CLIENT_ID
                   valueFrom:
                     secretKeyRef:
