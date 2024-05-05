@@ -5,6 +5,9 @@ metadata:
   namespace: 12inch-reviews
 spec:
   schedule: "30 * * * *"
+  concurrencyPolicy: "Forbid"
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 1
   jobTemplate:
     spec:
       template:
